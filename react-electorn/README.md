@@ -1,46 +1,7 @@
-# Getting Started with Create React App
+public 폴더에 electron.js 파일을 아래와 같이 만듭시다.
+public 폴더에 만드는 이유는 electron-builder가 패키징 할 때 create-react-app이 build 한 build 폴더를 패키징 하는데
+이때 electron 앱의 엔트리 포인트가 없는 상태가 됩니다.
+그래서 public 폴더에 electron 앱의 엔트리 포인트인 electron.js를 만들면 create-react-app의 webpack이 자동으로 public 폴더를 build 폴더에 복사하기 때문에 electron-builder 가 패키징 할 수 있게 됩니다.
+그리고 electron.js라고 이름 지은 이유는 electron-builder 가 디폴트로 일렉트론 앱의 엔트리 포인트로 build/electron.js 파일을 찾기 때문입니다.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+ "homepage"를 "./"로 설정하는 이유는 만약 설정하지 않으면, 패키지 된 앱이 js파일과 css 파일을 찾지 못하게 됩니다.
