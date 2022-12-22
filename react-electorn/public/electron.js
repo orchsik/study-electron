@@ -1,6 +1,7 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
+const { channels, mock } = require('../src/shared/constants');
 
 let mainWindow;
 
@@ -12,6 +13,7 @@ function createWindow() {
       nodeIntegration: true,
       enableRemoteModule: true,
       devTools: isDev,
+      contextIsolation: false,
     },
   });
 
@@ -22,7 +24,9 @@ function createWindow() {
   );
 
   if (isDev) {
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    mainWindow.webContents.openDevTools({
+      mode: 'right',
+    });
   }
 
   mainWindow.setResizable(true);
@@ -30,16 +34,33 @@ function createWindow() {
   mainWindow.focus();
 }
 
-app.on('ready', createWindow);
+const onChannelGetData = () => {
+  ipcMain.on(channels.GET_DATA, (event, arg) => {
+    const { product } = arg;
+    event.sender.send(channels.GET_DATA, mock.products[product]);
+  });
+};
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+const handleChannelQuit = () => {
+  ipcMain.handle(channels.QUIT, () => {
     app.quit();
-  }
+  });
+};
+
+app.on('ready', () => {
+  onChannelGetData();
+  handleChannelQuit();
+  createWindow();
 });
 
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
+  }
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
   }
 });
