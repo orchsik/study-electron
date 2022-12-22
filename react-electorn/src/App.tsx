@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 const { ipcRenderer } = window.require('electron');
 
 function App() {
-  const [product, setProduct] = useState('');
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ function App() {
     });
     // Clean the listener after the component is dismounted
     return () => {
-      ipcRenderer.removeAllListeners();
+      ipcRenderer.removeAllListeners(channels.GET_DATA);
     };
   }, []);
 

@@ -1,7 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const isDev = require('electron-is-dev');
-const { channels, mock } = require('../src/shared/constants');
+
+const { channels, mock } = require('./shared/constants');
 
 let mainWindow;
 
@@ -17,11 +18,11 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
+  const builderUrl =
+    process.env.ELECTRON_START_URL ||
+    `file:${path.sep}${path.join(__dirname, '..', 'build', 'index.html')}`;
+
+  mainWindow.loadURL(isDev ? 'http://localhost:3000' : builderUrl);
 
   if (isDev) {
     mainWindow.webContents.openDevTools({
