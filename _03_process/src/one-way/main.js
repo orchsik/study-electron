@@ -1,12 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
-const handleSetTitle = (event, title) => {
-  const webContents = event.sender;
-  const win = BrowserWindow.fromWebContents(webContents);
-  win.setTitle(title);
-};
-
 function createWindow() {
   const mainWindow = new BrowserWindow({
     webPreferences: {
@@ -15,6 +9,12 @@ function createWindow() {
   });
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 }
+
+const handleSetTitle = (event, title) => {
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents);
+  win.setTitle(title);
+};
 
 app.whenReady().then(() => {
   ipcMain.on('set-title', handleSetTitle);
