@@ -12,8 +12,11 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import electronDl from 'electron-dl';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+
+electronDl();
 
 class AppUpdater {
   constructor() {
@@ -79,6 +82,14 @@ const createWindow = async () => {
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
+  });
+
+  ipcMain.on('download', async (event, { url }) => {
+    if (mainWindow) {
+      console.log({ url });
+      const downloadResult = await electronDl.download(mainWindow, url);
+      console.log({ downloadResult });
+    }
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
