@@ -9,17 +9,17 @@ import notify from '../utils/toast';
 
 const Hello = () => {
   const [input, setInput] = useState({
-    NEISCode: '',
-    MasterID: 'admin',
+    EncryptedCode: 'EFABA73D422044C8B8EE20AA22D2C560',
+    MasterID: 'hc',
     passWord: '',
   });
 
   useEffect(() => {
     window.electron.ipcRenderer.on('updateLinkPlaceholder', (arg) => {
-      if (input.NEISCode !== arg && typeof arg === 'string') {
+      if (input.EncryptedCode !== arg && typeof arg === 'string') {
         setInput({
           ...input,
-          NEISCode: arg,
+          EncryptedCode: arg,
         });
       }
     });
@@ -83,9 +83,9 @@ const Hello = () => {
 
       <TextField
         variant="standard"
-        label="대학교코드"
-        name="NEISCode"
-        value={input.NEISCode}
+        label="EncryptedCode"
+        name="EncryptedCode"
+        value={input.EncryptedCode}
         onChange={onChangeInput}
         helperText="로그인 페이지 URL을 복사해보세요."
         style={{
