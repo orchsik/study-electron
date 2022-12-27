@@ -1,41 +1,87 @@
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import axios from 'axios';
+import { useState } from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import icon from '../../assets/icon.svg';
 import './App.css';
 
 const Hello = () => {
+  const [input, setInput] = useState({
+    NEISCode: undefined,
+    MasterID: 'admin',
+    passWord: undefined,
+  });
+
+  const onClickLogin = async () => {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: 'http://127.0.0.1:1991/api/mgr/test/login',
+        data: input,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onChangeInput = (
+    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { value, name } = e.currentTarget;
+    console.log({ name, value });
+    setInput({ ...input, [name]: value });
+  };
+
   return (
     <div>
-      <div className="Hello">
-        <img width="200" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <div className="Hello">
-        <button
-          type="button"
-          onClick={() => {
-            window.electron.ipcRenderer.sendMessage('download', {
-              url: 'https://jinhakstorageaccount.blob.core.windows.net/rms-8888/2023/A/%EA%B5%AD%EC%A0%9C%20%ED%95%99%EC%83%9D%EB%B6%80%EC%A2%85%ED%95%A9%EC%A0%84%ED%98%95%20%EC%9E%84%EC%9D%98%20%EB%A9%B4%EC%A0%91/5%40T00000001%402.mp4?st=2022-12-26T05%3A31%3A36Z&se=2022-12-26T05%3A56%3A36Z&sp=r&sv=2018-03-28&sr=b&sig=euAMJfg7Y6oxbSM2UbzIjZYWEG0Pdbjiy7W9yIvxg%2B8%3D',
-            });
-          }}
-        >
-          <span role="img" aria-label="books">
-            📚
-          </span>
-          Read our docs
-        </button>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="folded hands">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
+      {/* <p>
+        <TextField id="standard-basic" label="입학연도" variant="standard" />
+      </p> */}
+
+      {/* <p>
+        <TextField id="standard-basic" label="모집시기" variant="standard" />
+      </p> */}
+
+      <TextField
+        variant="standard"
+        label="아이디"
+        name="MasterID"
+        value={input.MasterID}
+        onChange={onChangeInput}
+        helperText="PAMS 관리자 로그인 ID"
+      />
+      <br />
+
+      <TextField
+        variant="standard"
+        label="비밀번호"
+        name="passWord"
+        value={input.passWord}
+        onChange={onChangeInput}
+        type="password"
+        helperText="PAMS 관리자 로그인 비밀번호"
+      />
+      <br />
+
+      <TextField
+        variant="standard"
+        label="대학교코드"
+        name="NEISCode"
+        value={input.NEISCode}
+        onChange={onChangeInput}
+        helperText="로그인 페이지 URL을 복사해보세요."
+      />
+      <br />
+      <br />
+
+      <Button
+        variant="contained"
+        style={{ width: '100%' }}
+        onClick={onClickLogin}
+      >
+        로그인
+      </Button>
     </div>
   );
 };
