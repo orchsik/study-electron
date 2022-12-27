@@ -15,6 +15,7 @@ import log from 'electron-log';
 import electronDl from 'electron-dl';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import ClipboardWatcher from './modules/ClipboardWatcher';
 
 electronDl();
 
@@ -83,6 +84,9 @@ const createWindow = async () => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
+
+  const clipboardWatcher = new ClipboardWatcher(mainWindow);
+  clipboardWatcher.startPolling();
 
   ipcMain.on('download', async (event, { url }) => {
     if (mainWindow) {

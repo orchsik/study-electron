@@ -1,16 +1,28 @@
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
 const Hello = () => {
   const [input, setInput] = useState({
-    NEISCode: undefined,
+    NEISCode: '',
     MasterID: 'admin',
-    passWord: undefined,
+    passWord: '',
   });
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on('updateLinkPlaceholder', (arg) => {
+      if (input.NEISCode !== arg && typeof arg === 'string') {
+        setInput({
+          ...input,
+          NEISCode: arg,
+        });
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onClickLogin = async () => {
     try {
@@ -52,6 +64,7 @@ const Hello = () => {
         helperText="PAMS 관리자 로그인 ID"
       />
       <br />
+      <br />
 
       <TextField
         variant="standard"
@@ -63,6 +76,7 @@ const Hello = () => {
         helperText="PAMS 관리자 로그인 비밀번호"
       />
       <br />
+      <br />
 
       <TextField
         variant="standard"
@@ -71,6 +85,9 @@ const Hello = () => {
         value={input.NEISCode}
         onChange={onChangeInput}
         helperText="로그인 페이지 URL을 복사해보세요."
+        style={{
+          width: 500,
+        }}
       />
       <br />
       <br />
