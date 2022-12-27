@@ -2,9 +2,10 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
 import { ToastContainer } from 'react-toastify';
-import { notify } from '../utils/toast';
+
+import BaseError from '../utils/BaseError';
+import notify from '../utils/toast';
 
 const Hello = () => {
   const [input, setInput] = useState({
@@ -34,7 +35,8 @@ const Hello = () => {
       });
       console.log(response.data);
     } catch (error) {
-      console.log(error);
+      const err = BaseError.handleError(error);
+      notify({ content: err.message, type: 'error' });
     }
   };
 

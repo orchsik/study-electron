@@ -10,6 +10,7 @@ module.exports = {
     '@typescript-eslint/lines-between-class-members': 0,
     'prefer-destructuring': 0,
     'import/prefer-default-export': 0,
+    'max-classes-per-file': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

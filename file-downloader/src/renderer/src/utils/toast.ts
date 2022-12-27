@@ -1,9 +1,17 @@
-import { toast, ToastOptions } from 'react-toastify';
+import { toast, ToastOptions, TypeOptions } from 'react-toastify';
 
-const notify = (content: string, options?: ToastOptions) => {
+const notify = ({
+  content,
+  type,
+  options,
+}: {
+  content: string;
+  type?: TypeOptions;
+  options?: ToastOptions;
+}) => {
   toast(content, {
     ...(options || {}),
-    type: 'default',
+    type: type || 'default',
     position: 'top-right',
     autoClose: 3_000,
     hideProgressBar: false,
@@ -15,4 +23,4 @@ const notify = (content: string, options?: ToastOptions) => {
   });
 };
 
-export { notify };
+export default notify;
