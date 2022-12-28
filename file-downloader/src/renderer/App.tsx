@@ -3,12 +3,15 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import Hello from './src/pages/Hello';
+import ServiceSelector from './src/pages/ServiceSelector';
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Hello />} />
+        <Route path="/select" element={<ServiceSelector />} />
+        {/* <Route path="/main" element={<Main />} /> */}
       </Routes>
     </Router>
   );

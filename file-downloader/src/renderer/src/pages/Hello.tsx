@@ -1,43 +1,40 @@
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-
-import BaseError from '../utils/BaseError';
-import notify from '../utils/toast';
+import { request_login } from '../api';
 
 const Hello = () => {
+  const navigate = useNavigate();
+
   const [input, setInput] = useState({
-    EncryptedCode: 'EFABA73D422044C8B8EE20AA22D2C560',
-    MasterID: 'hc',
+    MasterID: 'admin',
     passWord: '',
+    EncryptedCode: 'EFABA73D422044C8B8EE20AA22D2C560',
   });
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('updateLinkPlaceholder', (arg) => {
-      if (input.EncryptedCode !== arg && typeof arg === 'string') {
+    window.electron.ipcRenderer.on('updateLinkPlaceholder', (clipboardTxt) => {
+      if (
+        input.EncryptedCode !== clipboardTxt &&
+        typeof clipboardTxt === 'string'
+      ) {
         setInput({
           ...input,
-          EncryptedCode: arg,
+          EncryptedCode: clipboardTxt,
         });
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [input.EncryptedCode]);
 
   const onClickLogin = async () => {
-    try {
-      const response = await axios({
-        method: 'post',
-        url: 'http://127.0.0.1:1991/api/mgr/test/login',
-        data: input,
-      });
-      console.log(response.data);
-    } catch (error) {
-      const err = BaseError.handleError(error);
-      notify({ content: err.message, type: 'error' });
-    }
+    const response = await request_login(input);
+    if (response.error) return;
+    navigate('select', {
+      state: response.data,
+    });
   };
 
   const onChangeInput = (

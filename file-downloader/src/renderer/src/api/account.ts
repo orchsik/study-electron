@@ -3,14 +3,14 @@ import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
 import { HOST, PromiseRespnse } from './common';
 
-type TIpsiYear = {
+export type TIpsiYear = {
   IpsiYear: string;
 };
-type TIpsiGubun = {
+export type TIpsiGubun = {
   IpsiGubun: string;
   IpsiGubunName: string;
 };
-type ResponseLogin = {
+export type ResponseLogin = {
   ipsiYearList: TIpsiYear[];
   ipsiGubunList: TIpsiGubun[];
 };
