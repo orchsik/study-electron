@@ -3,9 +3,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
 import './App.css';
+import { StateProvider } from './src/data/StateProvider';
+
 import Hello from './src/pages/Hello';
 import ServiceSelector from './src/pages/ServiceSelector';
-import { StateProvider } from './src/data/StateProvider';
+import Downloader from './src/pages/Downloader';
 
 export default function App() {
   return (
@@ -14,7 +16,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Hello />} />
           <Route path="/select" element={<ServiceSelector />} />
-          {/* <Route path="/main" element={<Main />} /> */}
+          <Route path="/downloader" element={<Downloader />} />
         </Routes>
       </StateProvider>
 

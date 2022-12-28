@@ -36,7 +36,7 @@ const request_login = async ({
   try {
     const response = await axios({
       method: 'post',
-      url: `${HOST}/mgr/test/login`,
+      url: `${HOST}/mgr/downloader/login`,
       data: {
         MasterID,
         passWord,
