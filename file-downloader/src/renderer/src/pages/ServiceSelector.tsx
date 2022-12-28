@@ -7,11 +7,13 @@ import {
   Button,
 } from '@mui/material';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LoginResponse } from '../api';
+import { RecordExam, request_recordExams } from '../api/recordExam';
 import notify from '../utils/toast';
 
 const ServiceSelector = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const loginResponse: LoginResponse = location.state;
   const { NEISCode, serviceItems } = loginResponse;
@@ -48,19 +50,40 @@ const ServiceSelector = () => {
     }
   };
 
-  const onClickNext = () => {
+  const onClickNext = async () => {
     if (!selIpsiYear || !selIpsiGubun) {
       notify({
         content: '입학연도, 모집시기를 모두 선택해주세요.',
         type: 'warning',
       });
-
-      // TODO : 해당하는 녹화고사번호 리스트를 가져와서 다음 페이지로 넘겨주자.
-      // 다음 페이지는 녹화고사번호 선택하고 다운로드 누르면 다운로드 되는 페이지.
-      // 갯수랑 진행률 나온다.
-      // 이어 받기 이런거 할 수 있으면 하자
       return;
     }
+
+    // TODO : 해당하는 녹화고사번호 리스트를 가져와서 다음 페이지로 넘겨주자.
+    // 다음 페이지는 녹화고사번호 선택하고 다운로드 누르면 다운로드 되는 페이지.
+    // 갯수랑 진행률 나온다.
+    // 이어 받기 이런거 할 수 있으면 하자
+    const response = await request_recordExams({
+      NEISCode,
+      IpsiYear: selIpsiYear,
+      IpsiGubun: selIpsiGubun,
+    });
+    if (response.error || !response.data) {
+      return;
+    }
+    const recordExams: RecordExam[] = response.data;
+
+    if (recordExams.length === 0) {
+      notify({
+        content:
+          '녹화가 진행된 녹화고사가 없습니다. 다른 모집시기를 선택해주세요.',
+      });
+      return;
+    }
+
+    navigate('/downloader', {
+      state: response.data,
+    });
   };
 
   return (
