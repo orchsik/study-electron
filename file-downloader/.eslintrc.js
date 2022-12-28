@@ -12,6 +12,7 @@ module.exports = {
     'import/prefer-default-export': 0,
     'max-classes-per-file': 0,
     '@typescript-eslint/naming-convention': 0,
+    'no-useless-return': 1,
   },
   parserOptions: {
     ecmaVersion: 2020,

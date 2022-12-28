@@ -2,15 +2,16 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import { request_login } from '../api';
+import { useContextState } from '../data/StateProvider';
 
 const Hello = () => {
+  const { updateLoginState } = useContextState();
   const navigate = useNavigate();
 
   const [input, setInput] = useState({
-    MasterID: 'admin',
-    passWord: '',
+    MasterID: 'hc',
+    passWord: '1111',
     EncryptedCode: 'EFABA73D422044C8B8EE20AA22D2C560',
   });
 
@@ -29,20 +30,21 @@ const Hello = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input.EncryptedCode]);
 
-  const onClickLogin = async () => {
-    const response = await request_login(input);
-    if (response.error) return;
-    navigate('select', {
-      state: response.data,
-    });
-  };
-
   const onChangeInput = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value, name } = e.currentTarget;
-    console.log({ name, value });
     setInput({ ...input, [name]: value });
+  };
+
+  const onClickLogin = async () => {
+    const response = await request_login(input);
+    if (response.error || !response.data) return;
+
+    updateLoginState('NEISCode', response.data.NEISCode);
+    navigate('select', {
+      state: response.data,
+    });
   };
 
   return (
@@ -99,8 +101,6 @@ const Hello = () => {
       >
         로그인
       </Button>
-
-      <ToastContainer pauseOnFocusLoss={false} />
     </div>
   );
 };
