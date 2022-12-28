@@ -6,13 +6,22 @@ import { HOST, PromiseRespnse } from './common';
 export type TIpsiYear = {
   IpsiYear: string;
 };
+
 export type TIpsiGubun = {
+  IpsiYear: string;
   IpsiGubun: string;
   IpsiGubunName: string;
 };
-export type ResponseLogin = {
+
+export type ServiceItems = {
   ipsiYearList: TIpsiYear[];
   ipsiGubunList: TIpsiGubun[];
+};
+
+export type LoginResponse = {
+  NEISCode: string;
+  MasterID: string;
+  serviceItems: ServiceItems;
 };
 
 const request_login = async ({
@@ -23,7 +32,7 @@ const request_login = async ({
   MasterID: string;
   passWord: string;
   EncryptedCode: string;
-}): PromiseRespnse<ResponseLogin> => {
+}): PromiseRespnse<LoginResponse> => {
   try {
     const response = await axios({
       method: 'post',
