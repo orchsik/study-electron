@@ -90,11 +90,61 @@ const createWindow = async () => {
 
   ipcMain.on('download', async (event, { url }) => {
     if (mainWindow) {
-      console.log({ url });
-      const downloadResult = await electronDl.download(mainWindow, url);
-      console.log({ downloadResult });
+      electronDl.download(mainWindow, url, {
+        openFolderWhenDone: true,
+        showBadge: true,
+        showProgressBar: true,
+        onProgress: (progress) => {
+          const progressPercent = progress.percent * 100;
+          event.sender.send('download-progress', { progressPercent });
+          console.log(`Download progres: ${progressPercent.toFixed(2)}%`);
+        },
+      });
     }
   });
+
+  // ipcMain.on('downloads', async (event, { url }) => {
+  //   let totalFiles = url.length;
+  //   let downloadedFiles = 0;
+
+  //   if (mainWindow) {
+  //     // eslint-disable-next-line no-restricted-syntax
+  //     for await (const fileUrl of url) {
+  //       await electronDl.download(mainWindow, fileUrl, {
+  //         openFolderWhenDone: true,
+  //         showBadge: true,
+  //         showProgressBar: true,
+  //         onProgress: (progress) => {
+  //           console.log(
+  //             `Download progress for ${fileUrl}: ${progress.percent}%`
+  //           );
+  //           console.log(
+  //             `Overall progress: ${
+  //               ((downloadedFiles + progress.percent / 100) / totalFiles) * 100
+  //             }%`
+  //           );
+  //         },
+  //       });
+  //       downloadedFiles++;
+  //     }
+  //   }
+  // });
+
+  // ipcMain.on('download-files', async (event, files) => {
+  //   const downloadLocation = app.getPath('userData');
+
+  //   const promises = files.map((file) =>
+  //     download(mainWindow, file.url, {
+  //       saveAs: false,
+  //       directory: downloadLocation,
+  //       onProgress: (progress) => {
+  //         event.sender.send('download-progress', { progress, file });
+  //       },
+  //     })
+  //   );
+
+  //   await Promise.all(promises);
+  // });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
