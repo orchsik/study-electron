@@ -3,26 +3,21 @@ import { useEffect, useState } from 'react';
 
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
 
-const ProgressBar = ({
-  totalFiles = 0,
-  downloadedFiles = 0,
-}: {
-  totalFiles: number;
-  downloadedFiles: number;
-}) => {
+const ProgressBar = () => {
   const [progress, setProgress] = useState(0);
+  const [totalCnt, setTotalCnt] = useState(0);
+  const [downloadedCnt, setDownloadedCnt] = useState(0);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(
-      'download-progress',
-      ({ progressPercent }) => {
-        setProgress(progressPercent);
-      }
-    );
+    window.electron.ipcRenderer.on('download-progress', (args) => {
+      setProgress(args.progressPercent);
+      setTotalCnt(args.totalCnt);
+      setDownloadedCnt(args.downloadedCnt);
+    });
   }, []);
 
-  const label = totalFiles
-    ? `${Math.round(progress)}% - ${downloadedFiles}/${totalFiles}`
+  const label = totalCnt
+    ? `${Math.round(progress)}% - ${downloadedCnt}/${totalCnt}`
     : undefined;
 
   return (

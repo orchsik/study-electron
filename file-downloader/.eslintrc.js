@@ -15,6 +15,7 @@ module.exports = {
     'no-useless-return': 1,
     'react/jsx-props-no-spreading': 0,
     'react/destructuring-assignment': 0,
+    'no-plusplus': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

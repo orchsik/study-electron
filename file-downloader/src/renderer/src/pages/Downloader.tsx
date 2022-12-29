@@ -38,13 +38,13 @@ const Downloader = () => {
   const recordExams: RecordExam[] = location.state;
 
   // TODO
-  // 1. 선택한 고사의 녹화 파일을 다운로드 한다.
-  // 2. 다운로드 진행률을 하단에 보여준다.
-  // 3. 이어받기
-  // 4. 다운로드 폴더 선택, 기본 폴더 위치 알려주기
+  // [x]선택한 고사의 녹화 파일을 다운로드 한다.
+  // [x]다운로드 진행률을 하단에 보여준다.
+  // [-]다운로드 폴더 설정
+  // [-]이어받기
   const onClickDownload = async () => {
-    window.electron.ipcRenderer.sendMessage('download', {
-      url: SMAPLE_URL,
+    window.electron.ipcRenderer.sendMessage('downloads', {
+      urls: [SMAPLE_URL, SMAPLE_URL],
     });
   };
 
@@ -77,7 +77,7 @@ const Downloader = () => {
         </div>
         <br />
 
-        <ProgressBar totalFiles={1} downloadedFiles={0} progress={10} />
+        <ProgressBar />
         <br />
 
         <Button

@@ -89,62 +89,48 @@ const createWindow = async () => {
   clipboardWatcher.startPolling();
 
   ipcMain.on('download', async (event, { url }) => {
-    if (mainWindow) {
-      electronDl.download(mainWindow, url, {
-        openFolderWhenDone: true,
-        showBadge: true,
-        showProgressBar: true,
-        onProgress: (progress) => {
-          const progressPercent = progress.percent * 100;
-          event.sender.send('download-progress', { progressPercent });
-          console.log(`Download progres: ${progressPercent.toFixed(2)}%`);
-        },
+    if (mainWindow == null) return;
+    electronDl.download(mainWindow, url, {
+      openFolderWhenDone: true,
+      showBadge: true,
+      showProgressBar: true,
+      onProgress: (progress) => {
+        const progressPercent = progress.percent * 100;
+        event.sender.send('download-progress', { progressPercent });
+      },
+    });
+  });
+
+  ipcMain.on('downloads', async (event, { urls }: { urls: string[] }) => {
+    if (mainWindow == null) return;
+
+    const totalCnt = urls.length;
+    let downloadedCnt = 0;
+
+    const onProgressDown = (progress: electronDl.Progress) => {
+      const progressPercent = progress.percent * 100;
+      event.sender.send('download-progress', {
+        progressPercent,
+        totalCnt,
+        downloadedCnt,
+      });
+    };
+
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const url of urls) {
+      await electronDl.download(mainWindow, url, {
+        openFolderWhenDone: downloadedCnt + 1 === totalCnt,
+        showBadge: false,
+        showProgressBar: false,
+        onProgress: onProgressDown,
+      });
+      event.sender.send('download-progress', {
+        progressPercent: 100,
+        totalCnt,
+        downloadedCnt: ++downloadedCnt,
       });
     }
   });
-
-  // ipcMain.on('downloads', async (event, { url }) => {
-  //   let totalFiles = url.length;
-  //   let downloadedFiles = 0;
-
-  //   if (mainWindow) {
-  //     // eslint-disable-next-line no-restricted-syntax
-  //     for await (const fileUrl of url) {
-  //       await electronDl.download(mainWindow, fileUrl, {
-  //         openFolderWhenDone: true,
-  //         showBadge: true,
-  //         showProgressBar: true,
-  //         onProgress: (progress) => {
-  //           console.log(
-  //             `Download progress for ${fileUrl}: ${progress.percent}%`
-  //           );
-  //           console.log(
-  //             `Overall progress: ${
-  //               ((downloadedFiles + progress.percent / 100) / totalFiles) * 100
-  //             }%`
-  //           );
-  //         },
-  //       });
-  //       downloadedFiles++;
-  //     }
-  //   }
-  // });
-
-  // ipcMain.on('download-files', async (event, files) => {
-  //   const downloadLocation = app.getPath('userData');
-
-  //   const promises = files.map((file) =>
-  //     download(mainWindow, file.url, {
-  //       saveAs: false,
-  //       directory: downloadLocation,
-  //       onProgress: (progress) => {
-  //         event.sender.send('download-progress', { progress, file });
-  //       },
-  //     })
-  //   );
-
-  //   await Promise.all(promises);
-  // });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
