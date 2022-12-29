@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Button } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
@@ -8,7 +9,7 @@ const SMAPLE_URL =
   'https://jinhakstorageaccount.blob.core.windows.net/catchcam/22032806_45415_152942.mp4?sv=2021-08-06&st=2022-12-29T04%3A30%3A24Z&se=2022-12-30T04%3A30%3A24Z&sr=b&sp=r&sig=GitqeOy7UMfxqG1h9R0dS9fAGk2dTjDtCqfkSsEY54o%3D';
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 40 },
+  { field: 'no', headerName: 'No', width: 40 },
   { field: 'type', headerName: 'type', width: 80 },
   { field: 'ExamSetNo', headerName: '고사번호', width: 250 },
   { field: 'ExamDay', headerName: '고사일', width: 140 },
@@ -31,11 +32,17 @@ const columns: GridColDef[] = [
   },
 ];
 
+type CheckedRecordExam = RecordExam & { checked: boolean };
+
 const Downloader = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const recordExams: RecordExam[] = location.state;
+  const originRecordExams: RecordExam[] = location.state;
+
+  const [recordExams, selRecordExams] = useState<CheckedRecordExam[]>(
+    originRecordExams.map((item) => ({ ...item, checked: false }))
+  );
 
   // TODO
   // [x]선택한 고사의 녹화 파일을 다운로드 한다.
@@ -48,13 +55,23 @@ const Downloader = () => {
     });
   };
 
+  const onSelectionModelChange = (selectedIds: GridSelectionModel) => {
+    const checkedRecordExams = recordExams.map((item) => {
+      const checked = selectedIds.some((id) => id === item.ExamSetNo);
+      item.checked = checked;
+      return item;
+    });
+    selRecordExams(checkedRecordExams);
+  };
+
   const onClickBack = async () => {
     navigate('/select');
   };
 
   const rows = recordExams.map((item, idx) => {
     return {
-      id: idx + 1,
+      no: idx + 1,
+      id: item.ExamSetNo,
       type: item.type,
       ExamSetNo: item.ExamSetNo,
       ExamDay: item.ExamDay,
@@ -65,7 +82,7 @@ const Downloader = () => {
 
   return (
     <div style={{ flex: 1, width: '100vw' }}>
-      <div style={{ padding: '0 10%' }}>
+      <div style={{ padding: '0 6%' }}>
         <div style={{ height: '60vh', width: '100%' }}>
           <DataGrid
             rows={rows}
@@ -73,6 +90,7 @@ const Downloader = () => {
             pageSize={5}
             rowsPerPageOptions={[5]}
             checkboxSelection
+            onSelectionModelChange={onSelectionModelChange}
           />
         </div>
         <br />
