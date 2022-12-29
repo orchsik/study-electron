@@ -1,22 +1,9 @@
 import axios from 'axios';
+
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
+import { ServiceItems } from '../data/type';
 import { HOST, PromiseRespnse } from './common';
-
-export type TIpsiYear = {
-  IpsiYear: string;
-};
-
-export type TIpsiGubun = {
-  IpsiYear: string;
-  IpsiGubun: string;
-  IpsiGubunName: string;
-};
-
-export type ServiceItems = {
-  ipsiYearList: TIpsiYear[];
-  ipsiGubunList: TIpsiGubun[];
-};
 
 export type LoginResponse = {
   NEISCode: string;

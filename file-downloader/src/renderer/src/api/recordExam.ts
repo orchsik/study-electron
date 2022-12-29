@@ -1,19 +1,8 @@
 import axios from 'axios';
+import { RecordExam } from '../data/type';
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
 import { HOST, PromiseRespnse } from './common';
-
-export type RecordExam = {
-  type: 'RMSA' | 'RMS';
-  NEISCode: string;
-  IpsiYear: string;
-  IpsiGubun: string;
-  ExamSetNo: string;
-  ExamDay: string;
-  ExamTime: string;
-  stuSetCnt: number;
-  blobCnt: number;
-};
 
 const request_recordExams = async ({
   NEISCode,
