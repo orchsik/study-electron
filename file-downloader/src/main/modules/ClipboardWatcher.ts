@@ -15,8 +15,8 @@ class ClipboardWatcher {
   }
 
   resetPlaceholder() {
-    const description = '로그인 페이지 URL을 복사해보세요.';
-    this.win.webContents.send('updateLinkPlaceholder', description);
+    const text = '로그인 페이지 URL을 복사해보세요.';
+    this.win.webContents.send('updateLinkPlaceholder', { text });
   }
 
   poll() {
@@ -38,7 +38,7 @@ class ClipboardWatcher {
     }
 
     this.previous = text;
-    this.win.webContents.send('updateLinkPlaceholder', text);
+    this.win.webContents.send('updateLinkPlaceholder', { text });
   }
 }
 

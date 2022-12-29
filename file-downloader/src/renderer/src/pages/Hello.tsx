@@ -17,17 +17,20 @@ const Hello = () => {
   });
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('updateLinkPlaceholder', (clipboardTxt) => {
-      if (
-        input.EncryptedCode !== clipboardTxt &&
-        typeof clipboardTxt === 'string'
-      ) {
-        setInput({
-          ...input,
-          EncryptedCode: clipboardTxt,
-        });
+    window.electron.ipcRenderer.on(
+      'updateLinkPlaceholder',
+      ({ text: clipboardTxt }) => {
+        if (
+          input.EncryptedCode !== clipboardTxt &&
+          typeof clipboardTxt === 'string'
+        ) {
+          setInput({
+            ...input,
+            EncryptedCode: clipboardTxt,
+          });
+        }
       }
-    });
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input.EncryptedCode]);
 
