@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 import LinearProgressWithLabel from '../components/LinearProgressWithLabel';
 
-const ProgressBar = () => {
+const DownloadProgressBar = () => {
   const [progress, setProgress] = useState(0);
   const [totalCnt, setTotalCnt] = useState(0);
   const [downloadedCnt, setDownloadedCnt] = useState(0);
@@ -27,4 +27,4 @@ const ProgressBar = () => {
   );
 };
 
-export default ProgressBar;
+export default DownloadProgressBar;
