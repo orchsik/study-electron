@@ -7,16 +7,20 @@ import {
   Button,
 } from '@mui/material';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { LoginResponse } from '../api';
-import { RecordExam, request_recordExams } from '../api/recordExam';
+import { useNavigate } from 'react-router-dom';
+
+import { request_recordExams } from '../api';
+import { useContextState } from '../data/StateProvider';
+import { RecordExam } from '../data/type';
 import notify from '../utils/toast';
 
 const ServiceSelector = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const loginResponse: LoginResponse = location.state;
-  const { NEISCode, serviceItems } = loginResponse;
+
+  const {
+    state: { loginState, serviceItems },
+  } = useContextState();
+  const { NEISCode } = loginState;
 
   const filterIpsiGubunList = (IpsiYear: string) => {
     return serviceItems.ipsiGubunList.filter((item) => {

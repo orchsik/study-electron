@@ -13,6 +13,20 @@ export type ServiceItems = {
   ipsiGubunList: IpsiGubunItem[];
 };
 
+/**
+ *
+ */
+
+export type LoginState = {
+  NEISCode: string;
+  IpsiYear: string;
+  IpsiGubun: string;
+};
+
+/**
+ *
+ */
+
 export type RecordExam = {
   type: 'RMSA' | 'RMS';
   NEISCode: string;

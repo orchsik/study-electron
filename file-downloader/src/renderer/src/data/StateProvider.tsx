@@ -1,19 +1,18 @@
 import { useState } from 'react';
-import createCtx from '../utils/createContext';
 
-type LoginState = {
-  NEISCode: string;
-  IpsiYear: string;
-  IpsiGubun: string;
-};
+import createCtx from '../utils/createContext';
+import { LoginState, ServiceItems } from './type';
 
 type UpdateLoginState = (name: keyof LoginState, value: string) => void;
+type UpdateServiceItems = (value: ServiceItems) => void;
 
 type TStateProvider = {
   state: {
-    login: LoginState;
+    loginState: LoginState;
+    serviceItems: ServiceItems;
   };
   updateLoginState: UpdateLoginState;
+  updateServiceItems: UpdateServiceItems;
 };
 const [useCtx, Provider] = createCtx<TStateProvider>();
 
@@ -23,6 +22,10 @@ const StateProvider = ({ children }: { children: React.ReactElement }) => {
     IpsiYear: '',
     IpsiGubun: '',
   });
+  const [serviceItems, setServiceItems] = useState<ServiceItems>({
+    ipsiYearList: [],
+    ipsiGubunList: [],
+  });
 
   const updateLoginState: UpdateLoginState = (name, value) => {
     setLoginState({
@@ -31,13 +34,19 @@ const StateProvider = ({ children }: { children: React.ReactElement }) => {
     });
   };
 
+  const updateServiceItems: UpdateServiceItems = (value) => {
+    setServiceItems(value);
+  };
+
   return (
     <Provider
       value={{
         state: {
-          login: loginState,
+          loginState,
+          serviceItems,
         },
         updateLoginState,
+        updateServiceItems,
       }}
     >
       {children}

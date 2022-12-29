@@ -14,11 +14,13 @@ import notify from '../utils/toast';
 
 const Downloader = () => {
   const navigate = useNavigate();
+
   const location = useLocation();
   const recordExams = location.state;
   console.log({ recordExams });
 
   const onClickDownload = async () => {};
+
   const onClickBack = async () => {
     navigate('/select');
   };

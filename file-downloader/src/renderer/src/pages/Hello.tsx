@@ -6,8 +6,9 @@ import { request_login } from '../api';
 import { useContextState } from '../data/StateProvider';
 
 const Hello = () => {
-  const { updateLoginState } = useContextState();
   const navigate = useNavigate();
+
+  const { updateLoginState, updateServiceItems } = useContextState();
 
   const [input, setInput] = useState({
     MasterID: 'hc',
@@ -42,9 +43,9 @@ const Hello = () => {
     if (response.error || !response.data) return;
 
     updateLoginState('NEISCode', response.data.NEISCode);
-    navigate('select', {
-      state: response.data,
-    });
+    updateServiceItems(response.data.serviceItems);
+
+    navigate('select');
   };
 
   return (
