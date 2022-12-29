@@ -13,6 +13,8 @@ module.exports = {
     'max-classes-per-file': 0,
     '@typescript-eslint/naming-convention': 0,
     'no-useless-return': 1,
+    'react/jsx-props-no-spreading': 0,
+    'react/destructuring-assignment': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

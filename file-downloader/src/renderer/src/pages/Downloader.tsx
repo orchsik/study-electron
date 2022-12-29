@@ -2,6 +2,10 @@ import { Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RecordExam } from '../data/type';
+import ProgressBar from './ProgressBar';
+
+const SMAPLE_URL =
+  'https://jinhakstorageaccount.blob.core.windows.net/catchcam/22032806_45415_152942.mp4?sv=2021-08-06&st=2022-12-29T04%3A30%3A24Z&se=2022-12-30T04%3A30%3A24Z&sr=b&sp=r&sig=GitqeOy7UMfxqG1h9R0dS9fAGk2dTjDtCqfkSsEY54o%3D';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 40 },
@@ -38,7 +42,11 @@ const Downloader = () => {
   // 2. 다운로드 진행률을 하단에 보여준다.
   // 3. 이어받기
   // 4. 다운로드 폴더 선택, 기본 폴더 위치 알려주기
-  const onClickDownload = async () => {};
+  const onClickDownload = async () => {
+    window.electron.ipcRenderer.sendMessage('download', {
+      url: SMAPLE_URL,
+    });
+  };
 
   const onClickBack = async () => {
     navigate('/select');
@@ -58,7 +66,7 @@ const Downloader = () => {
   return (
     <div style={{ flex: 1, width: '100vw' }}>
       <div style={{ padding: '0 10%' }}>
-        <div style={{ height: '70vh', width: '100%' }}>
+        <div style={{ height: '60vh', width: '100%' }}>
           <DataGrid
             rows={rows}
             columns={columns}
@@ -69,6 +77,9 @@ const Downloader = () => {
         </div>
         <br />
 
+        <ProgressBar totalFiles={1} downloadedFiles={0} progress={10} />
+        <br />
+
         <Button
           variant="contained"
           style={{ width: '100%' }}
@@ -76,6 +87,8 @@ const Downloader = () => {
         >
           다운로드
         </Button>
+        <br />
+        <br />
 
         <Button
           variant="contained"
