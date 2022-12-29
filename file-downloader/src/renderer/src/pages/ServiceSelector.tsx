@@ -63,10 +63,6 @@ const ServiceSelector = () => {
       return;
     }
 
-    // TODO : 해당하는 녹화고사번호 리스트를 가져와서 다음 페이지로 넘겨주자.
-    // 다음 페이지는 녹화고사번호 선택하고 다운로드 누르면 다운로드 되는 페이지.
-    // 갯수랑 진행률 나온다.
-    // 이어 받기 이런거 할 수 있으면 하자
     const response = await request_recordExams({
       NEISCode,
       IpsiYear: selIpsiYear,
