@@ -3,7 +3,7 @@ import { useState } from 'react';
 import createCtx from '../utils/createContext';
 import { LoginState, ServiceItems } from './type';
 
-type UpdateLoginState = (name: keyof LoginState, value: string) => void;
+type UpdateLoginState = (value: Partial<LoginState>) => void;
 type UpdateServiceItems = (value: ServiceItems) => void;
 
 type TStateProvider = {
@@ -28,10 +28,10 @@ const StateProvider = ({ children }: { children: React.ReactElement }) => {
     ipsiGubunList: [],
   });
 
-  const updateLoginState: UpdateLoginState = (name, value) => {
+  const updateLoginState: UpdateLoginState = (value: Partial<LoginState>) => {
     setLoginState({
       ...loginState,
-      [name]: value,
+      ...value,
     });
   };
 

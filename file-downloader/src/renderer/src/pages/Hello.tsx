@@ -45,8 +45,10 @@ const Hello = () => {
     const response = await request_login(input);
     if (response.error || !response.data) return;
 
-    updateLoginState('NEISCode', response.data.NEISCode);
-    updateLoginState('AppCode', response.data.AppCode);
+    updateLoginState({
+      NEISCode: response.data.NEISCode,
+      AppCode: response.data.AppCode,
+    });
     updateServiceItems(response.data.serviceItems);
 
     navigate('select');

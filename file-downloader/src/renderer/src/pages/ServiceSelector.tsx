@@ -82,8 +82,10 @@ const ServiceSelector = () => {
       return;
     }
 
-    updateLoginState('IpsiYear', selIpsiYear);
-    updateLoginState('IpsiGubun', selIpsiGubun);
+    updateLoginState({
+      IpsiYear: selIpsiYear,
+      IpsiGubun: selIpsiGubun,
+    });
 
     navigate('/downloader', {
       state: response.data,
