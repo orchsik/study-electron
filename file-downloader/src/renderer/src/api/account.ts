@@ -7,6 +7,7 @@ import { HOST, PromiseRespnse } from './common';
 
 export type LoginResponse = {
   NEISCode: string;
+  AppCode: string;
   MasterID: string;
   serviceItems: ServiceItems;
 };

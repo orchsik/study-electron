@@ -19,6 +19,7 @@ const ServiceSelector = () => {
 
   const {
     state: { loginState, serviceItems },
+    updateLoginState,
   } = useContextState();
   const { NEISCode } = loginState;
 
@@ -80,6 +81,9 @@ const ServiceSelector = () => {
       });
       return;
     }
+
+    updateLoginState('IpsiYear', selIpsiYear);
+    updateLoginState('IpsiGubun', selIpsiGubun);
 
     navigate('/downloader', {
       state: response.data,

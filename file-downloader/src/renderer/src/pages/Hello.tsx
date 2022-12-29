@@ -46,6 +46,7 @@ const Hello = () => {
     if (response.error || !response.data) return;
 
     updateLoginState('NEISCode', response.data.NEISCode);
+    updateLoginState('AppCode', response.data.AppCode);
     updateServiceItems(response.data.serviceItems);
 
     navigate('select');

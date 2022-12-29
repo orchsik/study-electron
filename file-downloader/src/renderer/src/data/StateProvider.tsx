@@ -19,6 +19,7 @@ const [useCtx, Provider] = createCtx<TStateProvider>();
 const StateProvider = ({ children }: { children: React.ReactElement }) => {
   const [loginState, setLoginState] = useState<LoginState>({
     NEISCode: '',
+    AppCode: '',
     IpsiYear: '',
     IpsiGubun: '',
   });

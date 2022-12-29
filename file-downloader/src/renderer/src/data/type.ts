@@ -19,6 +19,7 @@ export type ServiceItems = {
 
 export type LoginState = {
   NEISCode: string;
+  AppCode: string;
   IpsiYear: string;
   IpsiGubun: string;
 };
