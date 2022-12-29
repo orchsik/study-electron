@@ -16,6 +16,7 @@ import electronDl from 'electron-dl';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import ClipboardWatcher from './modules/ClipboardWatcher';
+import DwonloadManager from './modules/DwonloadManager';
 
 electronDl();
 
@@ -88,48 +89,10 @@ const createWindow = async () => {
   const clipboardWatcher = new ClipboardWatcher(mainWindow);
   clipboardWatcher.startPolling();
 
-  ipcMain.on('download', async (event, { url }) => {
-    if (mainWindow == null) return;
-    electronDl.download(mainWindow, url, {
-      openFolderWhenDone: true,
-      showBadge: true,
-      showProgressBar: true,
-      onProgress: (progress) => {
-        const progressPercent = progress.percent * 100;
-        event.sender.send('download-progress', { progressPercent });
-      },
-    });
-  });
-
   ipcMain.on('downloads', async (event, { urls }: { urls: string[] }) => {
     if (mainWindow == null) return;
-
-    const totalCnt = urls.length;
-    let downloadedCnt = 0;
-
-    const onProgressDown = (progress: electronDl.Progress) => {
-      const progressPercent = progress.percent * 100;
-      event.sender.send('download-progress', {
-        progressPercent,
-        totalCnt,
-        downloadedCnt,
-      });
-    };
-
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const url of urls) {
-      await electronDl.download(mainWindow, url, {
-        openFolderWhenDone: downloadedCnt + 1 === totalCnt,
-        showBadge: false,
-        showProgressBar: false,
-        onProgress: onProgressDown,
-      });
-      event.sender.send('download-progress', {
-        progressPercent: 100,
-        totalCnt,
-        downloadedCnt: ++downloadedCnt,
-      });
-    }
+    const dwonloadManager = new DwonloadManager(event, mainWindow, urls);
+    dwonloadManager.downloads();
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
