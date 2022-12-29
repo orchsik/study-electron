@@ -30,7 +30,8 @@ const ServiceSelector = () => {
   };
 
   const initState = () => {
-    const initIpsiYear = serviceItems.ipsiYearList[0].IpsiYear;
+    const initIpsiYear =
+      loginState.IpsiYear || serviceItems.ipsiYearList[0].IpsiYear;
     return {
       initIpsiYear,
       initIpsiGubunList: filterIpsiGubunList(initIpsiYear),
@@ -41,7 +42,7 @@ const ServiceSelector = () => {
   const [ipsiGubunList, setIpsiGubunList] = useState(
     initState().initIpsiGubunList
   );
-  const [selIpsiGubun, setSelIpsiGubun] = useState('');
+  const [selIpsiGubun, setSelIpsiGubun] = useState(loginState.IpsiGubun || '');
 
   const onChangeSelect = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
