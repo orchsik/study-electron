@@ -3,9 +3,10 @@ import axios from 'axios';
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
 import { ServiceItems } from '../data/type';
-import { HOST, PromiseRespnse } from './common';
+import { PromiseRespnse } from './common';
 
 export type LoginResponse = {
+  token: string;
   NEISCode: string;
   AppCode: string;
   MasterID: string;
@@ -24,7 +25,7 @@ const request_login = async ({
   try {
     const response = await axios({
       method: 'post',
-      url: `${HOST}/mgr/downloader/login`,
+      url: `/mgr/downloader/login`,
       data: {
         MasterID,
         passWord,

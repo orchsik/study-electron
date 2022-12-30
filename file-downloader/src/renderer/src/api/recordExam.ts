@@ -1,8 +1,9 @@
 import axios from 'axios';
+
 import { RecordExam } from '../data/type';
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
-import { HOST, PromiseRespnse } from './common';
+import { PromiseRespnse } from './common';
 
 const request_recordExams = async ({
   NEISCode,
@@ -16,7 +17,7 @@ const request_recordExams = async ({
   try {
     const response = await axios({
       method: 'get',
-      url: `${HOST}/mgr/downloader/recordExams`,
+      url: `/mgr/downloader/recordExams`,
       params: {
         NEISCode,
         IpsiYear,

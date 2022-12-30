@@ -1,11 +1,15 @@
-import { TextField } from '@mui/material';
-import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+
 import { request_login } from '../api';
 import { useContextState } from '../data/StateProvider';
 
 const Hello = () => {
+  const [cookies, setCookie] = useCookies(['JWT_TOKEN']);
+
   const navigate = useNavigate();
 
   const { updateLoginState, updateServiceItems } = useContextState();
@@ -44,12 +48,13 @@ const Hello = () => {
   const onClickLogin = async () => {
     const response = await request_login(input);
     if (response.error || !response.data) return;
+    const { token, NEISCode, AppCode, serviceItems } = response.data;
 
-    updateLoginState({
-      NEISCode: response.data.NEISCode,
-      AppCode: response.data.AppCode,
-    });
-    updateServiceItems(response.data.serviceItems);
+    updateLoginState({ NEISCode, AppCode });
+    updateServiceItems(serviceItems);
+
+    // axios.defaults.headers.common['Authorization'] = `Bearer 123456`;
+    setCookie('JWT_TOKEN', token);
 
     navigate('select');
   };

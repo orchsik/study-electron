@@ -16,6 +16,8 @@ module.exports = {
     'react/jsx-props-no-spreading': 0,
     'react/destructuring-assignment': 0,
     'no-plusplus': 0,
+    'dot-notation': 0,
+    '@typescript-eslint/dot-notation': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,
