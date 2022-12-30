@@ -14,9 +14,6 @@ const request_getBlobnameList = async ({
     const response = await axios({
       method: 'get',
       url: `/mgr/azure/videos/${containerName}`,
-      headers: {
-        auth: 'asdf',
-      },
       params: { prefix },
     });
 

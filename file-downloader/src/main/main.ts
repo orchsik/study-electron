@@ -13,6 +13,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import electronDl from 'electron-dl';
+
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import ClipboardWatcher from './modules/ClipboardWatcher';
@@ -80,6 +81,7 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      webSecurity: false, // https://electronjs.org/docs/latest/tutorial/security
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),

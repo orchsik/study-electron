@@ -48,13 +48,10 @@ const Hello = () => {
   const onClickLogin = async () => {
     const response = await request_login(input);
     if (response.error || !response.data) return;
-    const { token, NEISCode, AppCode, serviceItems } = response.data;
+    const { NEISCode, AppCode, serviceItems } = response.data;
 
     updateLoginState({ NEISCode, AppCode });
     updateServiceItems(serviceItems);
-
-    // axios.defaults.headers.common['Authorization'] = `Bearer 123456`;
-    setCookie('JWT_TOKEN', token);
 
     navigate('select');
   };

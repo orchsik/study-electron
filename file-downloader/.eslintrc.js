@@ -18,6 +18,7 @@ module.exports = {
     'no-plusplus': 0,
     'dot-notation': 0,
     '@typescript-eslint/dot-notation': 0,
+    'no-underscore-dangle': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

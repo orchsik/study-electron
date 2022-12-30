@@ -13,6 +13,10 @@ export type LoginResponse = {
   serviceItems: ServiceItems;
 };
 
+const _setAuthToken = (token: string) => {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+};
+
 const request_login = async ({
   MasterID,
   passWord,
@@ -32,6 +36,9 @@ const request_login = async ({
         EncryptedCode,
       },
     });
+
+    _setAuthToken(response.data.token);
+
     return { data: response.data };
   } catch (err) {
     const error = BaseError.handleError(err);
