@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
@@ -8,8 +7,6 @@ import { request_login } from '../api';
 import { useContextState } from '../data/StateProvider';
 
 const Hello = () => {
-  const [cookies, setCookie] = useCookies(['JWT_TOKEN']);
-
   const navigate = useNavigate();
 
   const { updateLoginState, updateServiceItems } = useContextState();

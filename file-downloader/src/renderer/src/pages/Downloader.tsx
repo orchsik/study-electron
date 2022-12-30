@@ -66,9 +66,10 @@ const Downloader = () => {
         ExamSetNo: 'test001',
       }),
     });
-    if (!result.error || !result.data) return;
+    if (result.error || !result.data) return;
 
     const blobnameList = result.data;
+    console.log(blobnameList);
 
     // 위 로직 작동될 때 까지 봉인
     // window.electron.ipcRenderer.sendMessage('downloads', {

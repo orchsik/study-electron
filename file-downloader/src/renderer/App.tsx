@@ -1,5 +1,4 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-import { CookiesProvider } from 'react-cookie';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -16,14 +15,12 @@ export default function App() {
   return (
     <Router>
       <StateProvider>
-        <CookiesProvider>
-          <Routes>
-            {/* <Route path="/sampleDown" element={<SampleDown />} /> */}
-            <Route path="/" element={<Hello />} />
-            <Route path="/select" element={<ServiceSelector />} />
-            <Route path="/downloader" element={<Downloader />} />
-          </Routes>
-        </CookiesProvider>
+        <Routes>
+          {/* <Route path="/sampleDown" element={<SampleDown />} /> */}
+          <Route path="/" element={<Hello />} />
+          <Route path="/select" element={<ServiceSelector />} />
+          <Route path="/downloader" element={<Downloader />} />
+        </Routes>
       </StateProvider>
 
       <ToastContainer pauseOnFocusLoss={false} />
