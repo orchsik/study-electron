@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
+import { PromiseRespnse } from './common';
 
 const request_getBlobnameList = async ({
   containerName,
@@ -9,7 +10,7 @@ const request_getBlobnameList = async ({
 }: {
   containerName: string;
   prefix: string;
-}) => {
+}): PromiseRespnse<string[]> => {
   try {
     const response = await axios({
       method: 'get',
@@ -19,7 +20,8 @@ const request_getBlobnameList = async ({
 
     const cloudBlobnameList = response.data.result || [];
 
-    // TODO : 디비에 없는 녹화파일은 필터해야 함. filterValidatedBlobname
+    // TODO
+    // [-] 디비에 없는 녹화파일은 필터해야 함. filterValidatedBlobname
 
     return { data: cloudBlobnameList };
   } catch (err) {

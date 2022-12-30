@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
+
 import { RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
+import { request_getBlobnameList } from '../api';
+import { azure_containerName, azure_prefix } from '../utils/azure';
+import { useContextState } from '../data/StateProvider';
 
 const SMAPLE_URL =
   'https://jinhakstorageaccount.blob.core.windows.net/catchcam/22032806_45415_152942.mp4?sv=2021-08-06&st=2022-12-29T04%3A30%3A24Z&se=2022-12-30T04%3A30%3A24Z&sr=b&sp=r&sig=GitqeOy7UMfxqG1h9R0dS9fAGk2dTjDtCqfkSsEY54o%3D';
@@ -40,19 +44,36 @@ const Downloader = () => {
   const location = useLocation();
   const originRecordExams: RecordExam[] = location.state;
 
+  const {
+    state: { loginState },
+  } = useContextState();
+
   const [recordExams, selRecordExams] = useState<CheckedRecordExam[]>(
     originRecordExams.map((item) => ({ ...item, checked: false }))
   );
 
   // TODO
-  // [x]선택한 고사의 녹화 파일을 다운로드 한다.
-  // [x]다운로드 진행률을 하단에 보여준다.
-  // [-]다운로드 폴더 설정
-  // [-]이어받기
+  // [-] 선택한 고사의 녹화 파일을 다운로드 한다.
+  // [-] 다운로드 진행률을 하단에 보여준다.
+  // [-] 다운로드 폴더 설정
+  // [-] 이어받기
   const onClickDownload = async () => {
-    window.electron.ipcRenderer.sendMessage('downloads', {
-      urls: [SMAPLE_URL, SMAPLE_URL],
+    const result = await request_getBlobnameList({
+      containerName: azure_containerName(loginState.AppCode),
+      prefix: azure_prefix({
+        IpsiYear: loginState.IpsiYear,
+        IpsiGubun: loginState.IpsiGubun,
+        ExamSetNo: 'test001',
+      }),
     });
+    if (!result.error || !result.data) return;
+
+    const blobnameList = result.data;
+
+    // 위 로직 작동될 때 까지 봉인
+    // window.electron.ipcRenderer.sendMessage('downloads', {
+    //   urls: [SMAPLE_URL, SMAPLE_URL],
+    // });
   };
 
   const onSelectionModelChange = (selectedIds: GridSelectionModel) => {
