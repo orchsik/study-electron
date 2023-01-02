@@ -17,7 +17,8 @@ const DownloadProgressBar = () => {
   }, []);
 
   const label = totalCnt
-    ? `${Math.round(progress)}% - ${downloadedCnt}/${totalCnt}`
+    ? // ? `${downloadedCnt}/${totalCnt} - ${Math.round(progress)}%`
+      `${downloadedCnt}/${totalCnt}`
     : undefined;
 
   return (

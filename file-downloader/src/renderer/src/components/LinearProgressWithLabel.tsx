@@ -17,7 +17,7 @@ const LinearProgressWithLabel = (
       </Box>
 
       {props.label && (
-        <Box sx={{ ml: 1, minWidth: 70 }}>
+        <Box sx={{ ml: 1, minWidth: 50 }}>
           <Typography variant="body2" color="text.secondary">
             {props.label}
           </Typography>
