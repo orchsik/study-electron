@@ -1,45 +1,58 @@
-import { BrowserWindow } from 'electron';
+import path from 'path';
+import { app, BrowserWindow } from 'electron';
 import electronDl from 'electron-dl';
+
+export type UrlData = {
+  [group: string]: string[];
+};
 
 class DownloadManager {
   private win: BrowserWindow;
   private mainEvent: Electron.IpcMainEvent;
-  private urls: string[];
+  private urlData: UrlData;
   private totalCnt: number;
   private downloadedCnt: number;
 
   constructor(
     mainEvent: Electron.IpcMainEvent,
     win: BrowserWindow,
-    urls: string[]
+    urlData: UrlData
   ) {
     this.mainEvent = mainEvent;
     this.win = win;
-    this.urls = urls;
-    this.totalCnt = urls.length;
+    this.urlData = urlData;
+    this.totalCnt = Object.values(urlData).reduce(
+      (acc, items) => acc + items.length || 0,
+      0
+    );
     this.downloadedCnt = 0;
   }
 
   async downloads() {
-    // eslint-disable-next-line no-restricted-syntax
-    for await (const url of this.urls) {
-      try {
-        await electronDl.download(this.win, url, {
-          openFolderWhenDone: this.downloadedCnt + 1 === this.totalCnt,
-          showBadge: false,
-          showProgressBar: false,
-          onProgress: this.onProgressDown,
-        });
-      } catch (error) {
-        console.log('[FAILURE] electronDl.download', error);
-        //
-      } finally {
-        this.upDownloadedCnt();
-        this.mainEvent.sender.send('download-progress', {
-          progressPercent: 100,
-          totalCnt: this.totalCnt,
-          downloadedCnt: this.downloadedCnt,
-        });
+    for await (const [group, urls] of Object.entries(this.urlData)) {
+      for await (const url of urls) {
+        try {
+          await electronDl.download(this.win, url, {
+            directory: `${app.getPath('downloads')}${path.sep}RMSA${
+              path.sep
+            }${group}`,
+            openFolderWhenDone: this.downloadedCnt + 1 === this.totalCnt,
+            showBadge: false,
+            showProgressBar: false,
+            onProgress: this.onProgressDown,
+            overwrite: true,
+          });
+        } catch (error) {
+          console.log('[FAILURE] electronDl.download', error);
+          //
+        } finally {
+          this.upDownloadedCnt();
+          this.mainEvent.sender.send('download-progress', {
+            progressPercent: 100,
+            totalCnt: this.totalCnt,
+            downloadedCnt: this.downloadedCnt,
+          });
+        }
       }
     }
   }

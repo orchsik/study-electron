@@ -3,10 +3,12 @@ import { Button } from '@mui/material';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { RecordExam } from '../data/type';
+import { ExamUrlData, RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
-import { request_getBlobnameList } from '../api';
+import { request_getBlobnameList, request_postSAS } from '../api';
 import { useContextState } from '../data/StateProvider';
+import { azure_containerName } from '../utils/azure';
+import notify from '../utils/toast';
 
 const SMAPLE_URL =
   'https://jinhakstorageaccount.blob.core.windows.net/catchcam/22032806_45415_152942.mp4?sv=2021-08-06&st=2022-12-29T04%3A30%3A24Z&se=2022-12-30T04%3A30%3A24Z&sr=b&sp=r&sig=GitqeOy7UMfxqG1h9R0dS9fAGk2dTjDtCqfkSsEY54o%3D';
@@ -51,27 +53,67 @@ const Downloader = () => {
     originRecordExams.map((item) => ({ ...item, checked: false }))
   );
 
+  const validateSelected = (): string[] | undefined => {
+    const selectedExamSetNoList = recordExams
+      .filter((item) => item.checked)
+      .map((item) => item.ExamSetNo);
+    if (selectedExamSetNoList.length === 0) {
+      notify({
+        content: '고사를 1개 이상 선택해주세요.',
+        type: 'warning',
+      });
+      return undefined;
+    }
+    return selectedExamSetNoList;
+  };
+
   // TODO
   // [-] 선택한 고사의 녹화 파일을 다운로드 한다.
+  // [-] 다운로드 중 다운로드 막기
+  // [-] 다운로드 중 다운로드 막기
   // [-] 다운로드 진행률을 하단에 보여준다.
   // [-] 다운로드 폴더 설정
   // [-] 이어받기
   const onClickDownload = async () => {
+    const selectedExamSetNoList = validateSelected();
+    if (!selectedExamSetNoList) return;
+
+    const { NEISCode, AppCode, IpsiYear, IpsiGubun } = loginState;
+
     const result = await request_getBlobnameList({
-      NEISCode: loginState.NEISCode,
-      AppCode: loginState.AppCode,
-      IpsiYear: loginState.IpsiYear,
-      IpsiGubun: loginState.IpsiGubun,
-      ExamSetNoList: ['국제 학생부종합전형 면접'],
+      NEISCode,
+      AppCode,
+      IpsiYear,
+      IpsiGubun,
+      ExamSetNoList: selectedExamSetNoList,
     });
     if (result.error || !result.data) return;
 
-    const blobnameList = result.data;
+    const examBlobnameData = result.data;
+
+    const urlData: ExamUrlData = {};
+    for await (const [ExamSetNo, blobnames] of Object.entries(
+      examBlobnameData
+    )) {
+      for await (const blobname of blobnames) {
+        const sasResult = await request_postSAS(
+          azure_containerName(AppCode),
+          blobname
+        );
+        if (sasResult.data) {
+          if (urlData[ExamSetNo]) {
+            urlData[ExamSetNo] = [...urlData[ExamSetNo], sasResult.data];
+          } else {
+            urlData[ExamSetNo] = [sasResult.data];
+          }
+        }
+      }
+    }
 
     // 위 로직 작동될 때 까지 봉인
-    // window.electron.ipcRenderer.sendMessage('downloads', {
-    //   urls: [SMAPLE_URL, SMAPLE_URL],
-    // });
+    window.electron.ipcRenderer.sendMessage('downloads', {
+      urlData,
+    });
   };
 
   const onSelectionModelChange = (selectedIds: GridSelectionModel) => {

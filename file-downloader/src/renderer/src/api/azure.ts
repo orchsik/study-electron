@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { ExamBlobnameData } from '../data/type';
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
 import { PromiseRespnse } from './common';
@@ -16,7 +17,7 @@ const request_getBlobnameList = async ({
   IpsiYear: string;
   IpsiGubun: string;
   ExamSetNoList: string[];
-}): PromiseRespnse<string[]> => {
+}): PromiseRespnse<ExamBlobnameData> => {
   try {
     const response = await axios({
       method: 'get',
@@ -30,8 +31,12 @@ const request_getBlobnameList = async ({
       },
     });
 
-    const cloudBlobnameList = response.data.result || [];
-    return { data: cloudBlobnameList };
+    const examBlobnameData = response.data.result || [];
+    if (Object.keys(examBlobnameData).length === 0) {
+      throw Error('선택한 고사에서 다운로드 받을 파일이 없습니다.');
+    }
+
+    return { data: examBlobnameData };
   } catch (err) {
     const error = BaseError.handleError(err);
     notify({ content: error.message, type: 'error' });
@@ -44,7 +49,10 @@ const request_getBlobnameList = async ({
  * @param {string} Blobname {IpsiYear}/{IpsiGubun}/{ExamSetNo}/{filename} [ex] '2022/A/면접고사/T00000001.mp4'
  * @returns { string | boolean } url or false
  */
-const request_postSAS = async (containerName: string, Blobname: string) => {
+const request_postSAS = async (
+  containerName: string,
+  Blobname: string
+): PromiseRespnse<string> => {
   try {
     const response = await axios({
       method: 'post',

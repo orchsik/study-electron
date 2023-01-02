@@ -39,3 +39,12 @@ export type RecordExam = {
   stuSetCnt: number;
   blobCnt: number;
 };
+
+/**
+ *
+ */
+
+export type ExamBlobnameData = {
+  [ExamSetNo: string]: string[];
+};
+export type ExamUrlData = ExamBlobnameData;
