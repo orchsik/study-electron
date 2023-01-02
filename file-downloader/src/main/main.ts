@@ -17,7 +17,7 @@ import electronDl from 'electron-dl';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import ClipboardWatcher from './modules/ClipboardWatcher';
-import DwonloadManager from './modules/DwonloadManager';
+import DownloadManager from './modules/DownloadManager';
 
 electronDl();
 
@@ -93,7 +93,7 @@ const createWindow = async () => {
 
   ipcMain.on('downloads', async (event, { urls }: { urls: string[] }) => {
     if (mainWindow == null) return;
-    const dwonloadManager = new DwonloadManager(event, mainWindow, urls);
+    const dwonloadManager = new DownloadManager(event, mainWindow, urls);
     dwonloadManager.downloads();
   });
 
@@ -144,6 +144,7 @@ app
   .whenReady()
   .then(() => {
     createWindow();
+
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.

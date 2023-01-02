@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 import electronDl from 'electron-dl';
 
-class DwonloadManager {
+class DownloadManager {
   private win: BrowserWindow;
   private mainEvent: Electron.IpcMainEvent;
   private urls: string[];
@@ -23,19 +23,24 @@ class DwonloadManager {
   async downloads() {
     // eslint-disable-next-line no-restricted-syntax
     for await (const url of this.urls) {
-      await electronDl.download(this.win, url, {
-        openFolderWhenDone: this.downloadedCnt + 1 === this.totalCnt,
-        showBadge: false,
-        showProgressBar: false,
-        onProgress: this.onProgressDown,
-      });
-
-      this.upDownloadedCnt();
-      this.mainEvent.sender.send('download-progress', {
-        progressPercent: 100,
-        totalCnt: this.totalCnt,
-        downloadedCnt: this.downloadedCnt,
-      });
+      try {
+        await electronDl.download(this.win, url, {
+          openFolderWhenDone: this.downloadedCnt + 1 === this.totalCnt,
+          showBadge: false,
+          showProgressBar: false,
+          onProgress: this.onProgressDown,
+        });
+      } catch (error) {
+        console.log('[FAILURE] electronDl.download', error);
+        //
+      } finally {
+        this.upDownloadedCnt();
+        this.mainEvent.sender.send('download-progress', {
+          progressPercent: 100,
+          totalCnt: this.totalCnt,
+          downloadedCnt: this.downloadedCnt,
+        });
+      }
     }
   }
 
@@ -74,4 +79,4 @@ class DwonloadManager {
   };
 }
 
-export default DwonloadManager;
+export default DownloadManager;
