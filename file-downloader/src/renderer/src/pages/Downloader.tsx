@@ -6,7 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
 import { request_getBlobnameList } from '../api';
-import { azure_containerName, azure_prefix } from '../utils/azure';
 import { useContextState } from '../data/StateProvider';
 
 const SMAPLE_URL =
@@ -59,17 +58,15 @@ const Downloader = () => {
   // [-] 이어받기
   const onClickDownload = async () => {
     const result = await request_getBlobnameList({
-      containerName: azure_containerName(loginState.AppCode),
-      prefix: azure_prefix({
-        IpsiYear: loginState.IpsiYear,
-        IpsiGubun: loginState.IpsiGubun,
-        ExamSetNo: 'test001',
-      }),
+      NEISCode: loginState.NEISCode,
+      AppCode: loginState.AppCode,
+      IpsiYear: loginState.IpsiYear,
+      IpsiGubun: loginState.IpsiGubun,
+      ExamSetNoList: ['국제 학생부종합전형 면접'],
     });
     if (result.error || !result.data) return;
 
     const blobnameList = result.data;
-    console.log(blobnameList);
 
     // 위 로직 작동될 때 까지 봉인
     // window.electron.ipcRenderer.sendMessage('downloads', {

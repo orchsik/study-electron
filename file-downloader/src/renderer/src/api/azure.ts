@@ -5,24 +5,32 @@ import notify from '../utils/toast';
 import { PromiseRespnse } from './common';
 
 const request_getBlobnameList = async ({
-  containerName,
-  prefix,
+  NEISCode,
+  AppCode,
+  IpsiYear,
+  IpsiGubun,
+  ExamSetNoList,
 }: {
-  containerName: string;
-  prefix: string;
+  NEISCode: string;
+  AppCode: string;
+  IpsiYear: string;
+  IpsiGubun: string;
+  ExamSetNoList: string[];
 }): PromiseRespnse<string[]> => {
   try {
     const response = await axios({
       method: 'get',
-      url: `/mgr/azure/videos/${containerName}`,
-      params: { prefix },
+      url: `/mgr/downloader/blobNames`,
+      params: {
+        NEISCode,
+        AppCode,
+        IpsiYear,
+        IpsiGubun,
+        ExamSetNoList,
+      },
     });
 
     const cloudBlobnameList = response.data.result || [];
-
-    // TODO
-    // [-] 디비에 없는 녹화파일은 필터해야 함. filterValidatedBlobname
-
     return { data: cloudBlobnameList };
   } catch (err) {
     const error = BaseError.handleError(err);
