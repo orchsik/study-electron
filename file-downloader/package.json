@@ -158,7 +158,7 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "file-downloader",
+    "productName": "Innerview 다운로드 매니저",
     "appId": "org.orchsik.downloader",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
