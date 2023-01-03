@@ -91,16 +91,27 @@ const createWindow = async () => {
   const clipboardWatcher = new ClipboardWatcher(mainWindow);
   clipboardWatcher.startPolling();
 
-  ipcMain.on('downloads', async (event, { IpsiYear, IpsiGubun, urlData }) => {
+  const dwonloadManager = new DownloadManager(mainWindow);
+
+  ipcMain.on(
+    'downloads',
+    async (event, { IpsiYear, IpsiGubun, totalCnt, urlData }) => {
+      if (mainWindow == null) return;
+
+      dwonloadManager.downloads({
+        mainEvent: event,
+        directory: `${app.getPath('downloads')}${path.sep}RMSA${
+          path.sep
+        }${IpsiYear}${path.sep}${IpsiGubun}`,
+        urlData,
+        totalCnt,
+      });
+    }
+  );
+
+  ipcMain.on('init-downloads', async () => {
     if (mainWindow == null) return;
-    const dwonloadManager = new DownloadManager(
-      event,
-      mainWindow,
-      IpsiYear,
-      IpsiGubun,
-      urlData
-    );
-    dwonloadManager.downloads();
+    dwonloadManager.init();
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));

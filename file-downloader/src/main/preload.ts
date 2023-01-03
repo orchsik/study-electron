@@ -5,6 +5,8 @@ export type Channels =
   | 'download'
   | 'downloads'
   | 'download-progress'
+  | 'finish-download'
+  | 'init-downloads'
   | 'updateLinkPlaceholder';
 
 contextBridge.exposeInMainWorld('electron', {

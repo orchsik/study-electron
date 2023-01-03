@@ -8,7 +8,7 @@ declare global {
   interface Window {
     electron: {
       ipcRenderer: {
-        sendMessage(channel: Channels, args: AnyHash): void;
+        sendMessage(channel: Channels, args?: AnyHash): void;
 
         on(
           channel: Channels,

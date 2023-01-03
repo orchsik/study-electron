@@ -12,9 +12,9 @@ const Hello = () => {
   const { updateLoginState, updateServiceItems } = useContextState();
 
   const [input, setInput] = useState({
-    MasterID: 'hc',
-    passWord: '1111',
-    EncryptedCode: 'EFABA73D422044C8B8EE20AA22D2C560',
+    MasterID: '',
+    passWord: '',
+    EncryptedCode: '',
   });
 
   useEffect(() => {
@@ -32,8 +32,7 @@ const Hello = () => {
         }
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [input.EncryptedCode]);
+  }, [input]);
 
   const onChangeInput = (
     e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>

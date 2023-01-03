@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ExamUrlData, RecordExam } from '../data/type';
+import { ExamBlobnameData, ExamUrlData, RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
 import { request_getBlobnameList, request_postSAS } from '../api';
 import { useContextState } from '../data/StateProvider';
@@ -36,6 +36,24 @@ const columns: GridColDef[] = [
 
 type CheckedRecordExam = RecordExam & { checked: boolean };
 
+const urlDataFor = async (
+  containerName: string,
+  aEexamBlobnameData: ExamBlobnameData
+) => {
+  const urlData: ExamUrlData = {};
+  for await (const [ExamSetNo, blobnames] of Object.entries(
+    aEexamBlobnameData
+  )) {
+    for await (const blobname of blobnames) {
+      const sasResult = await request_postSAS(containerName, blobname);
+      if (sasResult.data) {
+        urlData[ExamSetNo] = [...(urlData[ExamSetNo] || []), sasResult.data];
+      }
+    }
+  }
+  return urlData;
+};
+
 const Downloader = () => {
   const navigate = useNavigate();
 
@@ -46,19 +64,58 @@ const Downloader = () => {
     state: { loginState },
   } = useContextState();
 
+  const { NEISCode, AppCode, IpsiYear, IpsiGubun } = loginState;
+
   const [recordExams, selRecordExams] = useState<CheckedRecordExam[]>(
     originRecordExams.map((item) => ({ ...item, checked: false }))
   );
   const [downloading, setDownloading] = useState(false);
 
+  const examBlobnameDataKeys = useRef<string[]>([]);
+  const examBlobnameData = useRef<ExamBlobnameData>({});
+
+  const downloadFiles = useCallback(
+    async (totalCnt?: number) => {
+      const aExamSetNo = examBlobnameDataKeys.current.shift();
+      if (!aExamSetNo) return;
+
+      const urlData = await urlDataFor(azure_containerName(AppCode), {
+        [aExamSetNo]: examBlobnameData.current[aExamSetNo],
+      });
+
+      // console.log('###', {
+      //   aExamSetNo,
+      //   current: examBlobnameData.current,
+      //   data: examBlobnameData.current[aExamSetNo],
+      //   urlData,
+      // });
+
+      setDownloading(true);
+      window.electron.ipcRenderer.sendMessage('downloads', {
+        IpsiYear,
+        IpsiGubun,
+        urlData,
+        totalCnt,
+      });
+    },
+    [AppCode, IpsiGubun, IpsiYear]
+  );
+
   useEffect(() => {
     window.electron.ipcRenderer.on(
       'download-progress',
       ({ totalCnt, downloadedCnt }) => {
-        setDownloading(totalCnt !== downloadedCnt);
+        if (totalCnt === downloadedCnt) {
+          setDownloading(false);
+          window.electron.ipcRenderer.sendMessage('init-downloads');
+        }
       }
     );
-  }, []);
+
+    window.electron.ipcRenderer.on('finish-download', () => {
+      downloadFiles();
+    });
+  }, [downloadFiles]);
 
   const validateSelected = (): string[] | undefined => {
     const selectedExamSetNoList = recordExams
@@ -74,13 +131,6 @@ const Downloader = () => {
     return selectedExamSetNoList;
   };
 
-  // TODO
-  // [X] 선택한 고사의 녹화 파일을 다운로드 한다.
-  // [X] 다운로드 진행률을 하단에 보여준다.
-  // [X] 다운로드 중 다운로드 막기
-  // [-] 다운로드 중단하기
-  // [-] 이어받기
-  // [-] 다운로드 폴더 설정
   const onClickDownload = async () => {
     if (downloading) {
       notify({
@@ -93,8 +143,6 @@ const Downloader = () => {
     const selectedExamSetNoList = validateSelected();
     if (!selectedExamSetNoList) return;
 
-    const { NEISCode, AppCode, IpsiYear, IpsiGubun } = loginState;
-
     const result = await request_getBlobnameList({
       NEISCode,
       AppCode,
@@ -104,29 +152,15 @@ const Downloader = () => {
     });
     if (result.error || !result.data) return;
 
-    const examBlobnameData = result.data;
+    const selExamBlobnameData = result.data;
+    const totalCnt = Object.values(selExamBlobnameData).reduce(
+      (acc, items) => acc + items.length || 0,
+      0
+    );
+    examBlobnameDataKeys.current = Object.keys(selExamBlobnameData);
+    examBlobnameData.current = selExamBlobnameData;
 
-    const urlData: ExamUrlData = {};
-    for await (const [ExamSetNo, blobnames] of Object.entries(
-      examBlobnameData
-    )) {
-      for await (const blobname of blobnames) {
-        const sasResult = await request_postSAS(
-          azure_containerName(AppCode),
-          blobname
-        );
-        if (sasResult.data) {
-          urlData[ExamSetNo] = [...(urlData[ExamSetNo] || []), sasResult.data];
-        }
-      }
-    }
-
-    setDownloading(true);
-    window.electron.ipcRenderer.sendMessage('downloads', {
-      IpsiYear,
-      IpsiGubun,
-      urlData,
-    });
+    downloadFiles(totalCnt);
   };
 
   const onSelectionModelChange = (selectedIds: GridSelectionModel) => {
