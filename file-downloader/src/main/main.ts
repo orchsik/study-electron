@@ -95,12 +95,12 @@ const createWindow = async () => {
 
   ipcMain.on(
     'downloads',
-    async (event, { IpsiYear, IpsiGubun, totalCnt, urlData }) => {
+    async (event, { AppCode, IpsiYear, IpsiGubun, totalCnt, urlData }) => {
       if (mainWindow == null) return;
 
       dwonloadManager.downloads({
         mainEvent: event,
-        directory: `${app.getPath('downloads')}${path.sep}RMSA${
+        directory: `${app.getPath('downloads')}${path.sep}RMS-${AppCode}${
           path.sep
         }${IpsiYear}${path.sep}${IpsiGubun}`,
         urlData,
