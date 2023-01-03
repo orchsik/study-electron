@@ -68,12 +68,11 @@ const Downloader = () => {
   };
 
   // TODO
-  // [-] 선택한 고사의 녹화 파일을 다운로드 한다.
+  // [X] 선택한 고사의 녹화 파일을 다운로드 한다.
+  // [X] 다운로드 진행률을 하단에 보여준다.
   // [-] 다운로드 중 다운로드 막기
-  // [-] 다운로드 중 다운로드 막기
-  // [-] 다운로드 진행률을 하단에 보여준다.
-  // [-] 다운로드 폴더 설정
   // [-] 이어받기
+  // [-] 다운로드 폴더 설정
   const onClickDownload = async () => {
     const selectedExamSetNoList = validateSelected();
     if (!selectedExamSetNoList) return;
@@ -101,16 +100,11 @@ const Downloader = () => {
           blobname
         );
         if (sasResult.data) {
-          if (urlData[ExamSetNo]) {
-            urlData[ExamSetNo] = [...urlData[ExamSetNo], sasResult.data];
-          } else {
-            urlData[ExamSetNo] = [sasResult.data];
-          }
+          urlData[ExamSetNo] = [...(urlData[ExamSetNo] || []), sasResult.data];
         }
       }
     }
 
-    // 위 로직 작동될 때 까지 봉인
     window.electron.ipcRenderer.sendMessage('downloads', {
       urlData,
     });

@@ -16,6 +16,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 0,
     'react/destructuring-assignment': 0,
     'no-plusplus': 0,
+    'no-continue': 0,
     'dot-notation': 0,
     '@typescript-eslint/dot-notation': 0,
     'no-underscore-dangle': 0,
