@@ -123,6 +123,8 @@ const Downloader = () => {
 
     setDownloading(true);
     window.electron.ipcRenderer.sendMessage('downloads', {
+      IpsiYear,
+      IpsiGubun,
       urlData,
     });
   };

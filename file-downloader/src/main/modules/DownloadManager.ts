@@ -9,6 +9,8 @@ export type UrlData = {
 class DownloadManager {
   private win: BrowserWindow;
   private mainEvent: Electron.IpcMainEvent;
+  private IpsiYear: string;
+  private IpsiGubun: string;
   private urlData: UrlData;
   private totalCnt: number;
   private downloadedCnt: number;
@@ -16,10 +18,14 @@ class DownloadManager {
   constructor(
     mainEvent: Electron.IpcMainEvent,
     win: BrowserWindow,
+    IpsiYear: string,
+    IpsiGubun: string,
     urlData: UrlData
   ) {
     this.mainEvent = mainEvent;
     this.win = win;
+    this.IpsiYear = IpsiYear;
+    this.IpsiGubun = IpsiGubun;
     this.urlData = urlData;
     this.totalCnt = Object.values(urlData).reduce(
       (acc, items) => acc + items.length || 0,
@@ -33,9 +39,9 @@ class DownloadManager {
       for await (const url of urls) {
         try {
           await electronDl.download(this.win, url, {
-            directory: `${app.getPath('downloads')}${path.sep}RMSA${
-              path.sep
-            }${group}`,
+            directory: `${app.getPath('downloads')}${path.sep}RMSA${path.sep}${
+              this.IpsiYear
+            }${path.sep}${this.IpsiGubun}${path.sep}${group}`,
             openFolderWhenDone: this.downloadedCnt + 1 === this.totalCnt,
             showBadge: false,
             showProgressBar: false,

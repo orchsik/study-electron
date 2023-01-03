@@ -17,7 +17,7 @@ import electronDl from 'electron-dl';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import ClipboardWatcher from './modules/ClipboardWatcher';
-import DownloadManager, { UrlData } from './modules/DownloadManager';
+import DownloadManager from './modules/DownloadManager';
 
 electronDl();
 
@@ -91,9 +91,15 @@ const createWindow = async () => {
   const clipboardWatcher = new ClipboardWatcher(mainWindow);
   clipboardWatcher.startPolling();
 
-  ipcMain.on('downloads', async (event, { urlData }: { urlData: UrlData }) => {
+  ipcMain.on('downloads', async (event, { IpsiYear, IpsiGubun, urlData }) => {
     if (mainWindow == null) return;
-    const dwonloadManager = new DownloadManager(event, mainWindow, urlData);
+    const dwonloadManager = new DownloadManager(
+      event,
+      mainWindow,
+      IpsiYear,
+      IpsiGubun,
+      urlData
+    );
     dwonloadManager.downloads();
   });
 
