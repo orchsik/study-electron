@@ -80,6 +80,7 @@ const createWindow = async () => {
     width: 1024,
     height: 728,
     icon: getAssetPath('icon.png'),
+    autoHideMenuBar: true,
     webPreferences: {
       webSecurity: false, // https://electronjs.org/docs/latest/tutorial/security
       preload: app.isPackaged
@@ -87,6 +88,7 @@ const createWindow = async () => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
+  mainWindow.setMenu(null);
 
   const clipboardWatcher = new ClipboardWatcher(mainWindow);
   clipboardWatcher.startPolling();

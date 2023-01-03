@@ -160,7 +160,7 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "H-downloader",
+    "productName": "file-downloader",
     "appId": "org.orchsik.downloader",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",

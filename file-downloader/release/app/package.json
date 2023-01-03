@@ -1,6 +1,6 @@
 {
   "name": "file-downloader",
-  "productName": "H-downloader",
+  "productName": "file-downloader",
   "version": "1.0.0",
   "description": "A foundation for scalable desktop apps",
   "license": "MIT",
