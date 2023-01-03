@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -9,9 +9,6 @@ import { request_getBlobnameList, request_postSAS } from '../api';
 import { useContextState } from '../data/StateProvider';
 import { azure_containerName } from '../utils/azure';
 import notify from '../utils/toast';
-
-const SMAPLE_URL =
-  'https://jinhakstorageaccount.blob.core.windows.net/catchcam/22032806_45415_152942.mp4?sv=2021-08-06&st=2022-12-29T04%3A30%3A24Z&se=2022-12-30T04%3A30%3A24Z&sr=b&sp=r&sig=GitqeOy7UMfxqG1h9R0dS9fAGk2dTjDtCqfkSsEY54o%3D';
 
 const columns: GridColDef[] = [
   { field: 'no', headerName: 'No', width: 40 },
@@ -52,6 +49,16 @@ const Downloader = () => {
   const [recordExams, selRecordExams] = useState<CheckedRecordExam[]>(
     originRecordExams.map((item) => ({ ...item, checked: false }))
   );
+  const [downloading, setDownloading] = useState(false);
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on(
+      'download-progress',
+      ({ totalCnt, downloadedCnt }) => {
+        setDownloading(totalCnt !== downloadedCnt);
+      }
+    );
+  }, []);
 
   const validateSelected = (): string[] | undefined => {
     const selectedExamSetNoList = recordExams
@@ -70,10 +77,19 @@ const Downloader = () => {
   // TODO
   // [X] 선택한 고사의 녹화 파일을 다운로드 한다.
   // [X] 다운로드 진행률을 하단에 보여준다.
-  // [-] 다운로드 중 다운로드 막기
+  // [X] 다운로드 중 다운로드 막기
+  // [-] 다운로드 중단하기
   // [-] 이어받기
   // [-] 다운로드 폴더 설정
   const onClickDownload = async () => {
+    if (downloading) {
+      notify({
+        content: '다운로드가 진행중입니다.',
+        type: 'warning',
+      });
+      return;
+    }
+
     const selectedExamSetNoList = validateSelected();
     if (!selectedExamSetNoList) return;
 
@@ -105,6 +121,7 @@ const Downloader = () => {
       }
     }
 
+    setDownloading(true);
     window.electron.ipcRenderer.sendMessage('downloads', {
       urlData,
     });
