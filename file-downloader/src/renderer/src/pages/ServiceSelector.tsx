@@ -32,7 +32,8 @@ const ServiceSelector = () => {
 
   const initState = () => {
     const initIpsiYear =
-      loginState.IpsiYear || serviceItems.ipsiYearList[0].IpsiYear;
+      loginState.IpsiYear ||
+      serviceItems.ipsiYearList[serviceItems.ipsiYearList.length - 1].IpsiYear;
     return {
       initIpsiYear,
       initIpsiGubunList: filterIpsiGubunList(initIpsiYear),
