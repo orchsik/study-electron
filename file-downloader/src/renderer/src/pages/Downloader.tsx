@@ -179,6 +179,13 @@ const Downloader = () => {
   };
 
   const onClickBack = async () => {
+    if (downloading) {
+      notify({
+        content: '다운로드가 진행중입니다.',
+        type: 'warning',
+      });
+      return;
+    }
     navigate('/select');
   };
 
