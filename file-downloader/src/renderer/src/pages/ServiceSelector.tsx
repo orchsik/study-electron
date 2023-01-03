@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { request_recordExams } from '../api';
+import Loader from '../components/Loader';
 import { useContextState } from '../data/StateProvider';
 import { RecordExam } from '../data/type';
 import notify from '../utils/toast';
@@ -43,6 +44,7 @@ const ServiceSelector = () => {
     initState().initIpsiGubunList
   );
   const [selIpsiGubun, setSelIpsiGubun] = useState(loginState.IpsiGubun || '');
+  const [loading, setLoading] = useState(false);
 
   const onChangeSelect = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
@@ -65,11 +67,14 @@ const ServiceSelector = () => {
       return;
     }
 
+    setLoading(true);
     const response = await request_recordExams({
       NEISCode,
       IpsiYear: selIpsiYear,
       IpsiGubun: selIpsiGubun,
     });
+    setLoading(false);
+
     if (response.error || !response.data) {
       return;
     }
@@ -146,6 +151,8 @@ const ServiceSelector = () => {
       >
         다음
       </Button>
+
+      <Loader loading={loading} />
     </div>
   );
 };

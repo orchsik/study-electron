@@ -3,7 +3,9 @@ import httpAdapter from 'axios/lib/adapters/http';
 
 import BaseError from '../utils/BaseError';
 
-const HOST = 'http://127.0.0.1:1991/api';
+// AAA
+// const HOST = 'http://127.0.0.1:1991/api';
+const HOST = 'https://pams.jinhak.com/api';
 
 axios.defaults.baseURL = HOST;
 axios.defaults.adapter = httpAdapter;

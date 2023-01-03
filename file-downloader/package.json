@@ -160,8 +160,8 @@
     "webpack-merge": "^5.8.0"
   },
   "build": {
-    "productName": "electron-react-file-downloader",
-    "appId": "org.erb.ElectronReact",
+    "productName": "H-downloader",
+    "appId": "org.orchsik.downloader",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [

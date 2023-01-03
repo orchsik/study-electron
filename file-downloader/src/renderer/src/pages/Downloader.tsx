@@ -9,6 +9,7 @@ import { request_getBlobnameList, request_postSAS } from '../api';
 import { useContextState } from '../data/StateProvider';
 import { azure_containerName } from '../utils/azure';
 import notify from '../utils/toast';
+import Loader from '../components/Loader';
 
 const columns: GridColDef[] = [
   { field: 'no', headerName: 'No', width: 40 },
@@ -70,6 +71,7 @@ const Downloader = () => {
     originRecordExams.map((item) => ({ ...item, checked: false }))
   );
   const [downloading, setDownloading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const examBlobnameDataKeys = useRef<string[]>([]);
   const examBlobnameData = useRef<ExamBlobnameData>({});
@@ -92,6 +94,7 @@ const Downloader = () => {
 
       setDownloading(true);
       window.electron.ipcRenderer.sendMessage('downloads', {
+        AppCode,
         IpsiYear,
         IpsiGubun,
         urlData,
@@ -143,6 +146,7 @@ const Downloader = () => {
     const selectedExamSetNoList = validateSelected();
     if (!selectedExamSetNoList) return;
 
+    setLoading(true);
     const result = await request_getBlobnameList({
       NEISCode,
       AppCode,
@@ -150,6 +154,8 @@ const Downloader = () => {
       IpsiGubun,
       ExamSetNoList: selectedExamSetNoList,
     });
+    setLoading(false);
+
     if (result.error || !result.data) return;
 
     const selExamBlobnameData = result.data;
@@ -224,6 +230,8 @@ const Downloader = () => {
           뒤로
         </Button>
       </div>
+
+      <Loader loading={loading} />
     </div>
   );
 };

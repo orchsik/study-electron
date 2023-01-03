@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 
 import { request_login } from '../api';
 import { useContextState } from '../data/StateProvider';
+import Loader from '../components/Loader';
 
 const Hello = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Hello = () => {
     passWord: '',
     EncryptedCode: '',
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     window.electron.ipcRenderer.on(
@@ -42,7 +44,10 @@ const Hello = () => {
   };
 
   const onClickLogin = async () => {
+    setLoading(true);
     const response = await request_login(input);
+    setLoading(false);
+
     if (response.error || !response.data) return;
     const { NEISCode, AppCode, serviceItems } = response.data;
 
@@ -54,14 +59,6 @@ const Hello = () => {
 
   return (
     <div>
-      {/* <p>
-        <TextField id="standard-basic" label="입학연도" variant="standard" />
-      </p> */}
-
-      {/* <p>
-        <TextField id="standard-basic" label="모집시기" variant="standard" />
-      </p> */}
-
       <TextField
         variant="standard"
         label="아이디"
@@ -106,6 +103,8 @@ const Hello = () => {
       >
         로그인
       </Button>
+
+      <Loader loading={loading} />
     </div>
   );
 };

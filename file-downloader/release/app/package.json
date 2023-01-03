@@ -1,12 +1,13 @@
 {
-  "name": "electron-react-file-downloader",
+  "name": "file-downloader",
+  "productName": "H-downloader",
   "version": "1.0.0",
   "description": "A foundation for scalable desktop apps",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "orchsik",
+    "email": "orchsik@gmail.com",
+    "url": "https://github.com/secret"
   },
   "main": "./dist/main/main.js",
   "scripts": {
