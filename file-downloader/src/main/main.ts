@@ -20,6 +20,7 @@ import ClipboardWatcher from './modules/ClipboardWatcher';
 import DownloadManager from './modules/DownloadManager';
 
 electronDl();
+process.setMaxListeners(15);
 
 class AppUpdater {
   constructor() {
