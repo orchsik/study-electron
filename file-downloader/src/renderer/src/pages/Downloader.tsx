@@ -5,11 +5,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { ExamBlobnameData, ExamUrlData, RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
+import TextLoader from '../components/TextLoader';
 import { request_getBlobnameList, request_postSAS } from '../api';
 import { useContextState } from '../data/StateProvider';
 import { azure_containerName } from '../utils/azure';
 import notify from '../utils/toast';
-import Loader from '../components/Loader';
 
 const columns: GridColDef[] = [
   { field: 'no', headerName: 'No', width: 40 },
@@ -71,7 +71,13 @@ const Downloader = () => {
     originRecordExams.map((item) => ({ ...item, checked: false }))
   );
   const [downloading, setDownloading] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<{
+    value: boolean;
+    desc?: string;
+  }>({
+    value: false,
+    desc: '',
+  });
 
   const examBlobnameDataKeys = useRef<string[]>([]);
   const examBlobnameData = useRef<ExamBlobnameData>({});
@@ -81,9 +87,14 @@ const Downloader = () => {
       const aExamSetNo = examBlobnameDataKeys.current.shift();
       if (!aExamSetNo) return;
 
+      setLoading({
+        value: true,
+        desc: `${aExamSetNo} 다운로드를 준비중입니다.`,
+      });
       const urlData = await urlDataFor(azure_containerName(AppCode), {
         [aExamSetNo]: examBlobnameData.current[aExamSetNo],
       });
+      setLoading({ value: false });
 
       // console.log('###', {
       //   aExamSetNo,
@@ -92,7 +103,6 @@ const Downloader = () => {
       //   urlData,
       // });
 
-      setDownloading(true);
       window.electron.ipcRenderer.sendMessage('downloads', {
         AppCode,
         IpsiYear,
@@ -146,7 +156,7 @@ const Downloader = () => {
     const selectedExamSetNoList = validateSelected();
     if (!selectedExamSetNoList) return;
 
-    setLoading(true);
+    setLoading({ value: true, desc: '어떤 파일들이 있는지 확인하고 있어요.' });
     const result = await request_getBlobnameList({
       NEISCode,
       AppCode,
@@ -154,7 +164,7 @@ const Downloader = () => {
       IpsiGubun,
       ExamSetNoList: selectedExamSetNoList,
     });
-    setLoading(false);
+    setLoading({ value: false });
 
     if (result.error || !result.data) return;
 
@@ -238,7 +248,7 @@ const Downloader = () => {
         </Button>
       </div>
 
-      <Loader loading={loading} />
+      <TextLoader loading={loading.value} desc={loading.desc} />
     </div>
   );
 };
