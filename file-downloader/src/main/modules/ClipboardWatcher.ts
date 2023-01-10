@@ -27,24 +27,28 @@ class ClipboardWatcher {
   poll() {
     if (!(this.win instanceof BrowserWindow)) return;
 
-    let text = clipboard.readText();
-    const matchResult = text.match(this.encryptedRegex);
-    if (matchResult == null) {
-      return;
-    }
-
-    text = matchResult[0];
+    const text = clipboard.readText();
     if (!text) {
       this.resetPlaceholder();
       return;
     }
-    if (this.previous !== '' && this.previous === text) {
+    if (this.checkEqualValue(text)) {
       return;
     }
 
     this.previous = text;
-    this.win.webContents.send('updateLinkPlaceholder', { text });
+
+    const matchResult = text.match(this.encryptedRegex);
+    if (matchResult == null) {
+      return;
+    }
+    this.win.webContents.send('updateLinkPlaceholder', {
+      text: matchResult[0],
+    });
   }
+
+  private checkEqualValue = (text: string) =>
+    this.previous !== '' && this.previous === text;
 }
 
 export default ClipboardWatcher;
