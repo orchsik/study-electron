@@ -4,6 +4,7 @@ class ClipboardWatcher {
   private win: BrowserWindow;
   private encryptedRegex = /(?<=(EncryptedCode=)).+/g;
   private previous = '';
+  private intervalId: NodeJS.Timer | undefined;
 
   constructor(win: BrowserWindow) {
     this.win = win;
@@ -11,7 +12,11 @@ class ClipboardWatcher {
 
   startPolling() {
     this.poll();
-    setInterval(() => this.poll(), 1_000);
+    this.intervalId = setInterval(() => this.poll(), 1_000);
+  }
+
+  endPolling() {
+    clearInterval(this.intervalId);
   }
 
   resetPlaceholder() {
