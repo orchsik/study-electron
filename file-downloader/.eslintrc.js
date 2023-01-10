@@ -24,6 +24,7 @@ module.exports = {
     'react/require-default-props': 0,
     'react/jsx-curly-brace-presence': 0,
     'react/jsx-boolean-value': 0,
+    '@typescript-eslint/no-explicit-any': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,
