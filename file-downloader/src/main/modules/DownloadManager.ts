@@ -10,6 +10,7 @@ class DownloadManager {
   private win: BrowserWindow;
   private totalCnt: number;
   private downloadedCnt: number;
+  private stopFlag = false;
 
   constructor(win: BrowserWindow) {
     this.win = win;
@@ -20,6 +21,11 @@ class DownloadManager {
   init() {
     this.totalCnt = 0;
     this.downloadedCnt = 0;
+    this.stopFlag = false;
+  }
+
+  stop() {
+    this.stopFlag = true;
   }
 
   async downloads({
@@ -39,6 +45,7 @@ class DownloadManager {
 
     for await (const [group, urls] of Object.entries(urlData)) {
       for await (const url of urls) {
+        if (this.stopFlag) break;
         try {
           await electronDl.download(this.win, url, {
             directory: `${directory}${path.sep}${group}`,

@@ -19,7 +19,7 @@ const Downloader = () => {
   const { columns, rows, onSelectionModelChange, validateSelected } =
     useExamSelector({ originRecordExams });
 
-  const { downloading, loading, calcelDownload, onClickDownload } = useDownload(
+  const { downloading, loading, cancelDownload, onClickDownload } = useDownload(
     { validateSelected }
   );
 
@@ -61,13 +61,13 @@ const Downloader = () => {
             다운로드
           </Button>
 
-          {/* <Button
+          <Button
             variant="contained"
             style={{ width: '100%' }}
-            onClick={calcelDownload}
+            onClick={cancelDownload}
           >
             다운로드 취소
-          </Button> */}
+          </Button>
         </Stack>
         <br />
 

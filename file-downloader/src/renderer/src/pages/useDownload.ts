@@ -15,6 +15,7 @@ const urlDataFor = async (
     aEexamBlobnameData
   )) {
     for await (const blobname of blobnames) {
+      // TODO - request_postSAS 실패 처리
       const sasResult = await request_postSAS(containerName, blobname);
       if (sasResult.data) {
         urlData[ExamSetNo] = [...(urlData[ExamSetNo] || []), sasResult.data];
@@ -68,6 +69,7 @@ const useDownload = ({
       //   urlData,
       // });
 
+      setDownloading(true);
       window.electron.ipcRenderer.sendMessage('downloads', {
         AppCode,
         IpsiYear,
@@ -79,13 +81,18 @@ const useDownload = ({
     [AppCode, IpsiGubun, IpsiYear]
   );
 
+  const initProgressState = () => {
+    setDownloading(false);
+    setLoading({ value: false, desc: '' });
+  };
+
   useEffect(() => {
     const remover = window.electron.ipcRenderer.on(
       'download-progress',
       ({ totalCnt, downloadedCnt }) => {
+        // TODO - 다운로드 완료 다른 논리 사용하기
         if (totalCnt === downloadedCnt) {
-          setDownloading(false);
-          window.electron.ipcRenderer.sendMessage('init-downloads');
+          initProgressState();
         }
       }
     );
@@ -99,17 +106,9 @@ const useDownload = ({
     return () => remover?.();
   }, [downloadFiles]);
 
-  const onClickDownload = async () => {
-    if (loading.value || downloading) {
-      notify({
-        content: '다운로드가 진행중입니다.',
-        type: 'warning',
-      });
-      return;
-    }
-
-    const selectedExamSetNoList = validateSelected();
-    if (!selectedExamSetNoList) return;
+  const initDownload = async (ExamSetNoList: string[]) => {
+    initProgressState();
+    window.electron.ipcRenderer.sendMessage('init-downloads');
 
     setLoading({ value: true, desc: '어떤 파일들이 있는지 확인하고 있어요.' });
     const result = await request_getBlobnameList({
@@ -117,10 +116,8 @@ const useDownload = ({
       AppCode,
       IpsiYear,
       IpsiGubun,
-      ExamSetNoList: selectedExamSetNoList,
+      ExamSetNoList,
     });
-    setLoading({ value: false });
-
     if (result.error || !result.data) return;
 
     const selExamBlobnameData = result.data;
@@ -135,16 +132,30 @@ const useDownload = ({
     downloadFiles(totalCnt);
   };
 
-  const calcelDownload = () => {
-    // TODO
+  const onClickDownload = async () => {
+    if (loading.value || downloading) {
+      notify({ content: '다운로드가 진행중입니다.', type: 'warning' });
+      return;
+    }
+    const selectedExamSetNoList = validateSelected();
+    if (!selectedExamSetNoList) return;
+
+    initDownload(selectedExamSetNoList);
+  };
+
+  const cancelDownload = () => {
+    // TODO 확인 Alert 추가
+
     examBlobnameDataKeys.current = [];
+    initProgressState();
+    window.electron.ipcRenderer.sendMessage('cancel-downloads');
   };
 
   return {
     downloading,
     loading,
     onClickDownload,
-    calcelDownload,
+    cancelDownload,
   };
 };
 
