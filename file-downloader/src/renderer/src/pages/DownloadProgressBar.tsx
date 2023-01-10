@@ -10,7 +10,8 @@ const DownloadProgressBar = () => {
 
   useEffect(() => {
     window.electron.ipcRenderer.on('download-progress', (args) => {
-      setProgress(args.progressPercent);
+      // setProgress(args.progressPercent);
+      setProgress(Math.round((args.downloadedCnt / args.totalCnt) * 100));
       setTotalCnt(args.totalCnt);
       setDownloadedCnt(args.downloadedCnt);
     });
