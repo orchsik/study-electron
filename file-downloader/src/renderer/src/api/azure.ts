@@ -69,7 +69,10 @@ const request_postSAS = async (
     return { data: url };
   } catch (err) {
     const error = BaseError.handleError(err);
-    notify({ content: error.message, type: 'error' });
+    notify({
+      content: `다운로드 실패 - ${Blobname} \n${error.message}`,
+      type: 'error',
+    });
     return { error };
   }
 };

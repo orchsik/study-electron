@@ -22,6 +22,8 @@ module.exports = {
     'no-underscore-dangle': 0,
     'no-restricted-syntax': 0,
     'react/require-default-props': 0,
+    'react/jsx-curly-brace-presence': 0,
+    'react/jsx-boolean-value': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

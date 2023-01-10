@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { ExamBlobnameData, ExamUrlData, RecordExam } from '../data/type';
 import DownloadProgressBar from './DownloadProgressBar';
 import TextLoader from '../components/TextLoader';
+
 import { request_getBlobnameList, request_postSAS } from '../api';
+import { ExamBlobnameData, ExamUrlData, RecordExam } from '../data/type';
 import { useContextState } from '../data/StateProvider';
 import { azure_containerName } from '../utils/azure';
 import notify from '../utils/toast';
@@ -145,7 +147,7 @@ const Downloader = () => {
   };
 
   const onClickDownload = async () => {
-    if (downloading) {
+    if (loading.value || downloading) {
       notify({
         content: '다운로드가 진행중입니다.',
         type: 'warning',
@@ -229,14 +231,15 @@ const Downloader = () => {
         <DownloadProgressBar />
         <br />
 
-        <Button
-          variant="contained"
-          style={{ width: '100%' }}
-          onClick={onClickDownload}
-        >
-          다운로드
-        </Button>
-        <br />
+        <Stack spacing={2} direction="row">
+          <Button
+            variant="contained"
+            style={{ width: '100%' }}
+            onClick={onClickDownload}
+          >
+            다운로드
+          </Button>
+        </Stack>
         <br />
 
         <Button

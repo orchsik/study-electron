@@ -19,20 +19,11 @@ class ClipboardWatcher {
     clearInterval(this.intervalId);
   }
 
-  resetPlaceholder() {
-    const text = '로그인 페이지 URL을 복사해보세요.';
-    this.win.webContents.send('updateLinkPlaceholder', { text });
-  }
-
   poll() {
     if (!(this.win instanceof BrowserWindow)) return;
 
     const text = clipboard.readText();
-    if (!text) {
-      this.resetPlaceholder();
-      return;
-    }
-    if (this.checkEqualValue(text)) {
+    if (this.checkEqualValue(text) || !text) {
       return;
     }
     this.previous = text;
