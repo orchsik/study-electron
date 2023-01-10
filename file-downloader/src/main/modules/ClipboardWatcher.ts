@@ -35,7 +35,6 @@ class ClipboardWatcher {
     if (this.checkEqualValue(text)) {
       return;
     }
-
     this.previous = text;
 
     const matchResult = text.match(this.encryptedRegex);
