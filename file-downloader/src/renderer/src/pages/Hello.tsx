@@ -20,7 +20,7 @@ const Hello = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(
+    const remover = window.electron.ipcRenderer.on(
       'updateLinkPlaceholder',
       ({ text: clipboardTxt }) => {
         if (
@@ -34,6 +34,8 @@ const Hello = () => {
         }
       }
     );
+
+    return () => remover?.();
   }, [input]);
 
   const onChangeInput = (

@@ -80,7 +80,7 @@ const useDownload = ({
   );
 
   useEffect(() => {
-    window.electron.ipcRenderer.on(
+    const remover = window.electron.ipcRenderer.on(
       'download-progress',
       ({ totalCnt, downloadedCnt }) => {
         if (totalCnt === downloadedCnt) {
@@ -89,10 +89,14 @@ const useDownload = ({
         }
       }
     );
+    return () => remover?.();
+  }, []);
 
-    window.electron.ipcRenderer.on('finish-download', () => {
+  useEffect(() => {
+    const remover = window.electron.ipcRenderer.on('finish-download', () => {
       downloadFiles();
     });
+    return () => remover?.();
   }, [downloadFiles]);
 
   const onClickDownload = async () => {
