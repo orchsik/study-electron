@@ -25,6 +25,7 @@ const Downloader = () => {
 
   const onClickBack = async () => {
     if (downloading) {
+      // TODO - 다운로드 취소하고 뒤로 갈 건지 물어보기
       notify({
         content: '다운로드가 진행중입니다.',
         type: 'warning',

@@ -15,11 +15,11 @@ const urlDataFor = async (
     aEexamBlobnameData
   )) {
     for await (const blobname of blobnames) {
-      // TODO - request_postSAS 실패 처리
       const sasResult = await request_postSAS(containerName, blobname);
-      if (sasResult.data) {
-        urlData[ExamSetNo] = [...(urlData[ExamSetNo] || []), sasResult.data];
-      }
+      urlData[ExamSetNo] = [
+        ...(urlData[ExamSetNo] || []),
+        sasResult.data || '',
+      ];
     }
   }
   return urlData;
@@ -48,6 +48,11 @@ const useDownload = ({
   const examBlobnameDataKeys = useRef<string[]>([]);
   const examBlobnameData = useRef<ExamBlobnameData>({});
 
+  const initProgressState = () => {
+    setDownloading(false);
+    setLoading({ value: false, desc: '' });
+  };
+
   const downloadFiles = useCallback(
     async (totalCnt?: number) => {
       const aExamSetNo = examBlobnameDataKeys.current.shift();
@@ -70,6 +75,7 @@ const useDownload = ({
       // });
 
       setDownloading(true);
+
       window.electron.ipcRenderer.sendMessage('downloads', {
         AppCode,
         IpsiYear,
@@ -81,18 +87,17 @@ const useDownload = ({
     [AppCode, IpsiGubun, IpsiYear]
   );
 
-  const initProgressState = () => {
-    setDownloading(false);
-    setLoading({ value: false, desc: '' });
-  };
-
   useEffect(() => {
     const remover = window.electron.ipcRenderer.on(
       'download-progress',
-      ({ totalCnt, downloadedCnt }) => {
-        // TODO - 다운로드 완료 다른 논리 사용하기
-        if (totalCnt === downloadedCnt) {
+      ({ totalCnt, downloadedCnt, errorCnt }) => {
+        if (totalCnt === downloadedCnt + errorCnt) {
           initProgressState();
+          if (errorCnt === 0) return;
+          notify({
+            content: `${errorCnt}개 다운로드 실패했습니다.`,
+            type: 'warning',
+          });
         }
       }
     );

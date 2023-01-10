@@ -113,10 +113,12 @@ const createWindow = async () => {
   );
 
   ipcMain.on('cancel-downloads', async () => {
+    if (mainWindow == null) return;
     dwonloadManager.stop();
   });
 
   ipcMain.on('init-downloads', async () => {
+    if (mainWindow == null) return;
     dwonloadManager.init();
   });
 
