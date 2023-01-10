@@ -69,7 +69,7 @@ class DownloadManager {
       }
     }
 
-    mainEvent.sender.send('finish-download');
+    mainEvent.sender.send('download-flushed');
   }
 
   async download({ mainEvent, url }: { mainEvent: IpcMainEvent; url: string }) {

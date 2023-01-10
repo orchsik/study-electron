@@ -93,7 +93,7 @@ const useDownload = ({
   }, []);
 
   useEffect(() => {
-    const remover = window.electron.ipcRenderer.on('finish-download', () => {
+    const remover = window.electron.ipcRenderer.on('download-flushed', () => {
       downloadFiles();
     });
     return () => remover?.();

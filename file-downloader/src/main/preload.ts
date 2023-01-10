@@ -5,7 +5,7 @@ export type Channels =
   | 'download'
   | 'downloads'
   | 'download-progress'
-  | 'finish-download'
+  | 'download-flushed'
   | 'init-downloads'
   | 'updateLinkPlaceholder';
 
