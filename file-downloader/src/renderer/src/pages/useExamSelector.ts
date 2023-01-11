@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { GridColDef, GridSelectionModel } from '@mui/x-data-grid';
 
-import { RecordExam } from '../modules/data/type';
+import { RecordExam } from '../modules/data';
 import notify from '../utils/toast';
 
 export type CheckedRecordExam = RecordExam & { checked: boolean };

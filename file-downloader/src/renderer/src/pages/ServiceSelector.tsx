@@ -10,10 +10,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { request_recordExams } from '../api';
-import Loader from '../components/Loader';
-import { useContextState } from '../modules/data/StateProvider';
-import { RecordExam } from '../modules/data/type';
 import notify from '../utils/toast';
+import { RecordExam, useContextState } from '../modules/data';
+import Loader from '../components/Loader';
 
 const ServiceSelector = () => {
   const navigate = useNavigate();

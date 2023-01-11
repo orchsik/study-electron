@@ -3,13 +3,13 @@ import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import DownloadProgressBar from './DownloadProgressBar';
 import TextLoader from '../components/TextLoader';
+import { RecordExam } from '../modules/data';
+import { useDialog } from '../modules/dialog';
 
-import { RecordExam } from '../modules/data/type';
+import DownloadProgressBar from './DownloadProgressBar';
 import useExamSelector from './useExamSelector';
 import useDownload from './useDownload';
-import { useDialog } from '../modules/dialog';
 
 const Downloader = () => {
   const { confirm } = useDialog();

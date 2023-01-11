@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
-import { ServiceItems } from '../modules/data/type';
+import { ServiceItems } from '../modules/data';
 import { PromiseRespnse } from './common';
 
 export type LoginResponse = {
