@@ -26,6 +26,7 @@ module.exports = {
     'react/jsx-boolean-value': 0,
     '@typescript-eslint/no-explicit-any': 0,
     'no-labels': 0,
+    'promise/param-names': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

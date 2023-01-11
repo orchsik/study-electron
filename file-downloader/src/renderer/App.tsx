@@ -11,6 +11,8 @@ import { StateProvider } from './src/modules/data/StateProvider';
 import Hello from './src/pages/Hello';
 import ServiceSelector from './src/pages/ServiceSelector';
 import Downloader from './src/pages/Downloader';
+import Dialog from './src/modules/dialog/Dialog';
+import { DialogProvider } from './src/modules/dialog/DialogProvider';
 
 const darkTheme = createTheme({
   palette: {
@@ -20,20 +22,23 @@ const darkTheme = createTheme({
 
 export default function App() {
   return (
-    <Router>
-      <StateProvider>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <Routes>
-            {/* <Route path="/sampleDown" element={<SampleDown />} /> */}
-            <Route path="/" element={<Hello />} />
-            <Route path="/select" element={<ServiceSelector />} />
-            <Route path="/downloader" element={<Downloader />} />
-          </Routes>
-        </ThemeProvider>
-      </StateProvider>
+    <StateProvider>
+      <ThemeProvider theme={darkTheme}>
+        <DialogProvider>
+          <Router>
+            <CssBaseline />
+            <Routes>
+              {/* <Route path="/sampleDown" element={<SampleDown />} /> */}
+              <Route path="/" element={<Hello />} />
+              <Route path="/select" element={<ServiceSelector />} />
+              <Route path="/downloader" element={<Downloader />} />
+            </Routes>
 
-      <ToastContainer pauseOnFocusLoss={false} />
-    </Router>
+            <ToastContainer pauseOnFocusLoss={false} />
+            <Dialog />
+          </Router>
+        </DialogProvider>
+      </ThemeProvider>
+    </StateProvider>
   );
 }

@@ -1,27 +1,30 @@
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import MaterialDialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useCallback } from 'react';
+import { useDialog } from './DialogProvider';
 
-export default function AlertDialog({
-  alerting,
-  title,
-  message,
-  onConfirmPressed,
-  onCancelPressed,
-}: {
-  alerting: boolean;
-  title: string;
-  message?: string;
-  onConfirmPressed?: () => void;
-  onCancelPressed?: () => void;
-}) {
+const Dialog = () => {
+  const {
+    state: { show, title, description },
+    onInteractionEnd,
+  } = useDialog();
+
+  const onConfirmPressed = useCallback(() => {
+    onInteractionEnd(true);
+  }, [onInteractionEnd]);
+
+  const onCancelPressed = useCallback(() => {
+    onInteractionEnd(false);
+  }, [onInteractionEnd]);
+
   return (
     <div>
-      <Dialog
-        open={alerting}
+      <MaterialDialog
+        open={show}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -29,7 +32,7 @@ export default function AlertDialog({
 
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {message}
+            {description}
           </DialogContentText>
         </DialogContent>
 
@@ -41,7 +44,9 @@ export default function AlertDialog({
             </Button>
           ) : null}
         </DialogActions>
-      </Dialog>
+      </MaterialDialog>
     </div>
   );
-}
+};
+
+export { Dialog };
