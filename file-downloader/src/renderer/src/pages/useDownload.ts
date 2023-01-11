@@ -15,6 +15,8 @@ const urlDataFor = async (
   aEexamBlobnameData: ExamBlobnameData
 ) => {
   const urlData: ExamUrlData = {};
+  let errorMsg = '';
+
   for await (const [ExamSetNo, blobnames] of Object.entries(
     aEexamBlobnameData
   )) {
@@ -24,8 +26,13 @@ const urlDataFor = async (
         ...(urlData[ExamSetNo] || []),
         sasResult.data || '',
       ];
+      if (sasResult.error?.message) {
+        errorMsg += `\n${sasResult.error?.message || ''}`;
+      }
     }
   }
+
+  if (errorMsg) alert(errorMsg);
   return urlData;
 };
 
