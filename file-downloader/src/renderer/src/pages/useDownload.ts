@@ -5,6 +5,7 @@ import { ExamBlobnameData, ExamUrlData } from '../modules/data/type';
 import { useContextState } from '../modules/data/StateProvider';
 import { azure_containerName } from '../utils/azure';
 import notify from '../utils/toast';
+import { useDialog } from '../modules/dialog';
 
 const urlDataFor = async (
   containerName: string,
@@ -30,6 +31,8 @@ const useDownload = ({
 }: {
   validateSelected: () => string[] | undefined;
 }) => {
+  const { confirm } = useDialog();
+
   const {
     state: {
       loginState: { NEISCode, AppCode, IpsiYear, IpsiGubun },
@@ -148,8 +151,14 @@ const useDownload = ({
     initDownload(selectedExamSetNoList);
   };
 
-  const cancelDownload = () => {
-    // TODO 확인 Alert 추가
+  const cancelDownload = async () => {
+    if (!downloading && !loading.value) return;
+
+    const ok = await confirm(
+      '다운로드 취소',
+      `다운로드를 취소하시겠습니까?\n다운로드가 완료된 영상은 "Download" 폴더에 저장됩니다.`
+    );
+    if (!ok) return;
 
     examBlobnameDataKeys.current = [];
     initProgressState();

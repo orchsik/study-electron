@@ -7,12 +7,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
 import './src/api/common';
 import { StateProvider } from './src/modules/data/StateProvider';
+import { Dialog, DialogProvider } from './src/modules/dialog';
 
 import Hello from './src/pages/Hello';
 import ServiceSelector from './src/pages/ServiceSelector';
 import Downloader from './src/pages/Downloader';
-import Dialog from './src/modules/dialog/Dialog';
-import { DialogProvider } from './src/modules/dialog/DialogProvider';
 
 const darkTheme = createTheme({
   palette: {

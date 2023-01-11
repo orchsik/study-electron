@@ -5,13 +5,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import DownloadProgressBar from './DownloadProgressBar';
 import TextLoader from '../components/TextLoader';
-import notify from '../utils/toast';
 
 import { RecordExam } from '../modules/data/type';
 import useExamSelector from './useExamSelector';
 import useDownload from './useDownload';
+import { useDialog } from '../modules/dialog';
 
 const Downloader = () => {
+  const { confirm } = useDialog();
   const navigate = useNavigate();
   const location = useLocation();
   const originRecordExams: RecordExam[] = location.state;
@@ -25,12 +26,11 @@ const Downloader = () => {
 
   const onClickBack = async () => {
     if (downloading) {
-      // TODO - 다운로드 취소하고 뒤로 갈 건지 물어보기
-      notify({
-        content: '다운로드가 진행중입니다.',
-        type: 'warning',
-      });
-      return;
+      const ok = await confirm(
+        '다운로드 취소',
+        `다운로드를 취소하시겠습니까?\n다운로드가 완료된 영상은 "Download" 폴더에 저장됩니다.`
+      );
+      if (!ok) return;
     }
     navigate('/select');
   };
