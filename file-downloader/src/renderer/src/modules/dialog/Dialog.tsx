@@ -5,11 +5,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useCallback } from 'react';
-import { useDialog } from './DialogProvider';
+import { DialogType, useDialog } from './DialogProvider';
 
 const Dialog = () => {
   const {
-    state: { show, title, description },
+    state: { type, show, title, description },
     onInteractionEnd,
   } = useDialog();
 
@@ -38,7 +38,7 @@ const Dialog = () => {
 
         <DialogActions>
           <Button onClick={onConfirmPressed}>예</Button>
-          {onCancelPressed ? (
+          {type === DialogType.CONFIRM ? (
             <Button onClick={onCancelPressed} autoFocus>
               아니오
             </Button>

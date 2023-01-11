@@ -1,12 +1,15 @@
+/* eslint-disable consistent-return */
+
 import { useRef, useState } from 'react';
 import createCtx from '../../utils/createContext';
 
-export enum DialogType {
+enum DialogType {
   CONFIRM = 'CONFIRM',
+  ALERT = 'ALERT',
 }
 
 type OnInteractionEnd = (value: string | boolean) => void;
-type Confirm = (title: string, description?: string) => Promise<unknown>;
+type ShowDialog = (title: string, description?: string) => Promise<unknown>;
 
 type DialogState = {
   type: DialogType;
@@ -16,8 +19,9 @@ type DialogState = {
 };
 type Dialog = {
   state: DialogState;
-  confirm: Confirm;
   onInteractionEnd: OnInteractionEnd;
+  confirm: ShowDialog;
+  alert: ShowDialog;
 };
 
 const [useCtx, Provider] = createCtx<Dialog>();
@@ -38,14 +42,25 @@ const DialogProvider = ({ children }: { children: React.ReactElement }) => {
     resolver.current?.(value);
   };
 
-  const confirm: Confirm = async (aTtitle: string, aDescription = '') => {
+  const onShowDialog = (aTtitle: string, aDescription: string) => {
     setShow(true);
-    setType(DialogType.CONFIRM);
     setTitle(aTtitle);
     setDescription(aDescription);
     return new Promise((res) => {
       resolver.current = res;
     });
+  };
+
+  const confirm: ShowDialog = async (aTtitle: string, aDescription = '') => {
+    if (show) return;
+    setType(DialogType.CONFIRM);
+    return onShowDialog(aTtitle, aDescription);
+  };
+
+  const alert: ShowDialog = async (aTtitle: string, aDescription = '') => {
+    if (show) return;
+    setType(DialogType.ALERT);
+    return onShowDialog(aTtitle, aDescription);
   };
 
   return (
@@ -59,6 +74,7 @@ const DialogProvider = ({ children }: { children: React.ReactElement }) => {
         },
         onInteractionEnd,
         confirm,
+        alert,
       }}
     >
       {children}
@@ -66,4 +82,4 @@ const DialogProvider = ({ children }: { children: React.ReactElement }) => {
   );
 };
 
-export { useCtx as useDialog, DialogProvider };
+export { useCtx as useDialog, DialogProvider, DialogType };

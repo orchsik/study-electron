@@ -5,14 +5,12 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import TextLoader from '../components/TextLoader';
 import { RecordExam } from '../modules/data';
-import { useDialog } from '../modules/dialog';
 
 import DownloadProgressBar from './DownloadProgressBar';
 import useExamSelector from './useExamSelector';
 import useDownload from './useDownload';
 
 const Downloader = () => {
-  const { confirm } = useDialog();
   const navigate = useNavigate();
   const location = useLocation();
   const originRecordExams: RecordExam[] = location.state;
@@ -20,18 +18,13 @@ const Downloader = () => {
   const { columns, rows, onSelectionModelChange, validateSelected } =
     useExamSelector({ originRecordExams });
 
-  const { downloading, loading, cancelDownload, onClickDownload } = useDownload(
-    { validateSelected }
-  );
+  const { loading, cancelDownload, onClickDownload } = useDownload({
+    validateSelected,
+  });
 
   const onClickBack = async () => {
-    if (downloading) {
-      const ok = await confirm(
-        '다운로드 취소',
-        `다운로드를 취소하시겠습니까?\n다운로드가 완료된 영상은 "Download" 폴더에 저장됩니다.`
-      );
-      if (!ok) return;
-    }
+    const ok = await cancelDownload();
+    if (!ok) return;
     navigate('/select');
   };
 

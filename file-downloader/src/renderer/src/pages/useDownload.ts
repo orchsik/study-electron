@@ -155,17 +155,22 @@ const useDownload = ({
   };
 
   const cancelDownload = async () => {
-    if (!downloading && !loading.value) return;
+    if (!downloading && !loading.value) {
+      return true;
+    }
 
     const ok = await confirm(
       '다운로드 취소',
       `다운로드를 취소하시겠습니까?\n다운로드가 완료된 영상은 "Download" 폴더에 저장됩니다.`
     );
-    if (!ok) return;
+    if (!ok) {
+      return false;
+    }
 
     examBlobnameDataKeys.current = [];
     initProgressState();
     window.electron.ipcRenderer.sendMessage('cancel-downloads');
+    return true;
   };
 
   return {
