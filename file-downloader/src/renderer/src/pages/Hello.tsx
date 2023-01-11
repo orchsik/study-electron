@@ -107,6 +107,17 @@ const Hello = () => {
         로그인
       </Button>
 
+      <p
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          padding: '10px',
+          fontSize: 10,
+        }}
+      >
+        v1.1.0
+      </p>
       <Loader loading={loading} />
     </div>
   );
