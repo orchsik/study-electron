@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import createCtx from '../utils/createContext';
+import createCtx from '../../utils/createContext';
 import { LoginState, ServiceItems } from './type';
 
 type UpdateLoginState = (value: Partial<LoginState>) => void;

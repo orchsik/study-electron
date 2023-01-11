@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ExamBlobnameData } from '../data/type';
+import { ExamBlobnameData } from '../modules/data/type';
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
 import { PromiseRespnse } from './common';

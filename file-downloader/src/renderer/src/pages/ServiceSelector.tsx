@@ -11,8 +11,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { request_recordExams } from '../api';
 import Loader from '../components/Loader';
-import { useContextState } from '../data/StateProvider';
-import { RecordExam } from '../data/type';
+import { useContextState } from '../modules/data/StateProvider';
+import { RecordExam } from '../modules/data/type';
 import notify from '../utils/toast';
 
 const ServiceSelector = () => {

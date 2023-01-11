@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { RecordExam } from '../data/type';
+import { RecordExam } from '../modules/data/type';
 import BaseError from '../utils/BaseError';
 import notify from '../utils/toast';
 import { PromiseRespnse } from './common';

@@ -6,7 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import './App.css';
 import './src/api/common';
-import { StateProvider } from './src/data/StateProvider';
+import { StateProvider } from './src/modules/data/StateProvider';
 
 import Hello from './src/pages/Hello';
 import ServiceSelector from './src/pages/ServiceSelector';

@@ -7,7 +7,7 @@ import DownloadProgressBar from './DownloadProgressBar';
 import TextLoader from '../components/TextLoader';
 import notify from '../utils/toast';
 
-import { RecordExam } from '../data/type';
+import { RecordExam } from '../modules/data/type';
 import useExamSelector from './useExamSelector';
 import useDownload from './useDownload';
 

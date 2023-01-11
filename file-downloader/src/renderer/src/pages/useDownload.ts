@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { request_getBlobnameList, request_postSAS } from '../api';
-import { ExamBlobnameData, ExamUrlData } from '../data/type';
-import { useContextState } from '../data/StateProvider';
+import { ExamBlobnameData, ExamUrlData } from '../modules/data/type';
+import { useContextState } from '../modules/data/StateProvider';
 import { azure_containerName } from '../utils/azure';
 import notify from '../utils/toast';
 
