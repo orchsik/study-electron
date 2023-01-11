@@ -26,6 +26,7 @@ module.exports = {
     'react/jsx-boolean-value': 0,
     '@typescript-eslint/no-explicit-any': 0,
     'no-alert': 0,
+    'no-new': 0,
     'promise/param-names': 0,
   },
   parserOptions: {
