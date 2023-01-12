@@ -1,8 +1,9 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { useLocation, useNavigate } from 'react-router-dom';
 
+import CircularLoader from '../components/CircularLoader';
 import TextLoader from '../components/TextLoader';
 import { RecordExam } from '../modules/data';
 
@@ -18,9 +19,13 @@ const Downloader = () => {
   const { columns, rows, onSelectionModelChange, validateSelected } =
     useExamSelector({ originRecordExams });
 
-  const { loading, cancelDownload, onClickDownload } = useDownload({
-    validateSelected,
-  });
+  const { downloading, loading, cancelDownload, onClickDownload } = useDownload(
+    {
+      validateSelected,
+    }
+  );
+
+  const disabledDownload = loading.value || downloading;
 
   const onClickBack = async () => {
     const ok = await cancelDownload();
@@ -50,9 +55,11 @@ const Downloader = () => {
           <Button
             variant="contained"
             style={{ width: '100%' }}
+            disabled={disabledDownload}
             onClick={onClickDownload}
           >
             다운로드
+            {disabledDownload && <CircularLoader />}
           </Button>
 
           <Button
