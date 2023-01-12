@@ -12,11 +12,12 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import electronDl from 'electron-dl';
 
-import MenuBuilder from './menu';
+// import MenuBuilder from './menu';
+// import AppUpdater from './modules/AppUpdater';
+
 import { resolveHtmlPath } from './util';
 import ClipboardWatcher from './modules/ClipboardWatcher';
 import DownloadManager from './modules/DownloadManager';
-import AppUpdater from './modules/AppUpdater';
 
 electronDl();
 process.setMaxListeners(15);
@@ -80,7 +81,6 @@ const createWindow = async () => {
         : path.join(__dirname, '../../.erb/dll/preload.js'),
     },
   });
-  mainWindow.setMenu(null);
 
   const clipboardWatcher = new ClipboardWatcher(mainWindow);
   clipboardWatcher.startPolling();
@@ -130,8 +130,9 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+  // const menuBuilder = new MenuBuilder(mainWindow);
+  // menuBuilder.buildMenu();
+  mainWindow.setMenu(null);
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {

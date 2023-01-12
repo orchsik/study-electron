@@ -28,6 +28,9 @@ module.exports = {
     'no-alert': 0,
     'no-new': 0,
     'promise/param-names': 0,
+    'import/extensions': 0,
+    'react/function-component-definition': 0,
+    'react/jsx-filename-extension': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,
