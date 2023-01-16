@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
@@ -40,7 +40,7 @@ const Hello = () => {
   }, [input]);
 
   const onChangeInput = (
-    e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: FormEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { value, name } = e.currentTarget;
     setInput({ ...input, [name]: value });

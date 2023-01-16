@@ -1,11 +1,14 @@
 /* eslint-disable consistent-return */
 
-import { useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import createCtx from '../../utils/createContext';
 
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-shadow */
 enum DialogType {
   CONFIRM = 'CONFIRM',
   ALERT = 'ALERT',
+  PROMPT = 'PROMPT',
 }
 
 type OnInteractionEnd = (value: string | boolean) => void;
@@ -22,13 +25,14 @@ type Dialog = {
   onInteractionEnd: OnInteractionEnd;
   confirm: ShowDialog;
   alert: ShowDialog;
+  prompt: ShowDialog;
 };
 
 const [useCtx, Provider] = createCtx<Dialog>();
 
 type Resolver<T> = (value: T | PromiseLike<T>) => void;
 
-const DialogProvider = ({ children }: { children: React.ReactElement }) => {
+const DialogProvider = ({ children }: { children: ReactElement }) => {
   const [type, setType] = useState<DialogType>(DialogType.CONFIRM);
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState('');
@@ -63,18 +67,25 @@ const DialogProvider = ({ children }: { children: React.ReactElement }) => {
     return onShowDialog(aTtitle, aDescription);
   };
 
+  const prompt: ShowDialog = async (aTtitle: string, aDescription = '') => {
+    if (show) return;
+    setType(DialogType.PROMPT);
+    return onShowDialog(aTtitle, aDescription);
+  };
+
   return (
     <Provider
       value={{
         state: {
           type,
+          show,
           title,
           description,
-          show,
         },
         onInteractionEnd,
         confirm,
         alert,
+        prompt,
       }}
     >
       {children}
