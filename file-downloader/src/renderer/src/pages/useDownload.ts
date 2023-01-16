@@ -136,7 +136,10 @@ const useDownload = ({
       IpsiGubun,
       ExamSetNoList,
     });
-    if (result.error || !result.data) return;
+    if (result.error || !result.data) {
+      initProgressState();
+      return;
+    }
 
     const selExamBlobnameData = result.data;
     const totalCnt = Object.values(selExamBlobnameData).reduce(

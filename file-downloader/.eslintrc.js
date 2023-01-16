@@ -31,6 +31,8 @@ module.exports = {
     'import/extensions': 0,
     'react/function-component-definition': 0,
     'react/jsx-filename-extension': 0,
+    camelcase: 0,
+    'lines-between-class-members': 0,
   },
   parserOptions: {
     ecmaVersion: 2020,

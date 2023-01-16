@@ -40,7 +40,7 @@ const useExamSelector = ({
 
   const columns: GridColDef[] = [
     { field: 'no', headerName: 'No', width: 40 },
-    { field: 'type', headerName: 'type', width: 80 },
+    { field: 'type', headerName: '구분', width: 80 },
     { field: 'ExamSetNo', headerName: '고사번호', width: 250 },
     { field: 'ExamDay', headerName: '고사일', width: 140 },
     {
