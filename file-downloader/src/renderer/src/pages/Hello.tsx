@@ -120,7 +120,7 @@ const Hello = () => {
           fontSize: 10,
         }}
       >
-        v1.1.0
+        v 1.1.0
       </p>
       <Loader loading={loading} />
     </div>

@@ -11,12 +11,16 @@ const request_getBlobnameList = async ({
   IpsiYear,
   IpsiGubun,
   ExamSetNoList,
+  masterId,
+  downReason,
 }: {
   NEISCode: string;
   AppCode: string;
   IpsiYear: string;
   IpsiGubun: string;
   ExamSetNoList: string[];
+  masterId: string;
+  downReason: string;
 }): PromiseRespnse<ExamBlobnameData> => {
   try {
     const response = await axios({
@@ -28,6 +32,8 @@ const request_getBlobnameList = async ({
         IpsiYear,
         IpsiGubun,
         ExamSetNoList,
+        masterId,
+        downReason,
       },
     });
 

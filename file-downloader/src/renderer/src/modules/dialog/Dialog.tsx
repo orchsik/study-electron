@@ -23,6 +23,10 @@ const Dialog = () => {
   }, [show]);
 
   const onChangeTextField = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 50) {
+      notify({ content: '최대 50자', type: 'warning' });
+      return;
+    }
     setfieldValue(event.target.value);
   };
 
@@ -45,6 +49,7 @@ const Dialog = () => {
   return (
     <div>
       <MaterialDialog
+        fullWidth
         open={show}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"

@@ -41,11 +41,11 @@ const useDownload = ({
 }: {
   validateSelected: () => string[] | undefined;
 }) => {
-  const { confirm } = useDialog();
+  const { confirm, prompt } = useDialog();
 
   const {
     state: {
-      loginState: { NEISCode, AppCode, IpsiYear, IpsiGubun },
+      loginState: { NEISCode, AppCode, IpsiYear, IpsiGubun, masterId },
     },
   } = useContextState();
 
@@ -128,6 +128,11 @@ const useDownload = ({
     initProgressState();
     window.electron.ipcRenderer.sendMessage('init-downloads');
 
+    const downReason = await prompt(
+      '사유를 입력해주세요.',
+      '다운로드 이력은 기록됩니다.'
+    );
+
     setLoading({ value: true, desc: '어떤 파일들이 있는지 확인하고 있어요.' });
     const result = await request_getBlobnameList({
       NEISCode,
@@ -135,6 +140,8 @@ const useDownload = ({
       IpsiYear,
       IpsiGubun,
       ExamSetNoList,
+      masterId,
+      downReason: downReason as string,
     });
     if (result.error || !result.data) {
       initProgressState();
