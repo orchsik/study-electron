@@ -54,7 +54,11 @@ const Hello = () => {
     if (response.error || !response.data) return;
     const { NEISCode, AppCode, serviceItems } = response.data;
 
-    updateLoginState({ NEISCode, AppCode });
+    updateLoginState({
+      NEISCode,
+      AppCode,
+      masterId: input.MasterID,
+    });
     updateServiceItems(serviceItems);
 
     navigate('select');

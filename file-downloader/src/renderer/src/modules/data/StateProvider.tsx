@@ -1,4 +1,6 @@
-import { useState } from 'react';
+/* eslint-disable no-unused-vars */
+
+import { ReactElement, useState } from 'react';
 
 import createCtx from '../../utils/createContext';
 import { LoginState, ServiceItems } from './type';
@@ -16,12 +18,13 @@ type TStateProvider = {
 };
 const [useCtx, Provider] = createCtx<TStateProvider>();
 
-const StateProvider = ({ children }: { children: React.ReactElement }) => {
+const StateProvider = ({ children }: { children: ReactElement }) => {
   const [loginState, setLoginState] = useState<LoginState>({
     NEISCode: '',
     AppCode: '',
     IpsiYear: '',
     IpsiGubun: '',
+    masterId: '',
   });
   const [serviceItems, setServiceItems] = useState<ServiceItems>({
     ipsiYearList: [],

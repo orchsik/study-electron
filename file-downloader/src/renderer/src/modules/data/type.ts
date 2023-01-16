@@ -22,6 +22,7 @@ export type LoginState = {
   AppCode: string;
   IpsiYear: string;
   IpsiGubun: string;
+  masterId: string;
 };
 
 /**
